@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -22,7 +21,6 @@ import javax.swing.SpinnerNumberModel;
 public class StartPanel extends JPanel
 {
 	private static final long serialVersionUID = 731131016262512964L;
-	Random rnd = new Random(System.currentTimeMillis());
 	
 	JCheckBox techBox = new JCheckBox("technician",true);
 	JSpinner techSpnr = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
@@ -36,6 +34,7 @@ public class StartPanel extends JPanel
 	
 	JRadioButton random = new JRadioButton("random");
 	JRadioButton sequential = new JRadioButton("sequential");
+	JRadioButton reverse = new JRadioButton("reverse");
 	ButtonGroup typeGrp = new ButtonGroup();
 	
 	JButton fcc = new JButton("FCC test");
@@ -47,6 +46,7 @@ public class StartPanel extends JPanel
 		boxTestMap = getBoxTestMap(boxes, list.toArray(new Exam[0]));
 		typeGrp.add(random);
 		typeGrp.add(sequential);
+		typeGrp.add(reverse);
 		random.setSelected(true);
 		IntStream.range(0, boxes.length).forEach(i->
 		{
@@ -119,7 +119,9 @@ public class StartPanel extends JPanel
 			testList.add(newTest);
 			ArrayList<Question> questions = new ArrayList<>(test);
 			if(random.isSelected())
-				Collections.shuffle(questions,rnd);
+				Collections.shuffle(questions,FccAmateurRadioExam.rnd);
+			if(reverse.isSelected())
+				Collections.reverse(questions);
 			IntStream.range(0, cnt).forEach(i->newTest.add(questions.get(i)));
 		}
 		return testList ;

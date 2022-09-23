@@ -12,12 +12,13 @@ public class Exam extends ArrayList<Question>
 	private static final long serialVersionUID = -7783047363660109022L;
 	private String name="unassigned";
 	private List<BufferedImage> imageList;
-	public Exam(String name,String string, List<BufferedImage> imageList)
+	public Exam(String name,String questionsString, List<BufferedImage> imageList)
 	{
 		this.name = name;
 		this.imageList = new ArrayList<>(imageList.stream().filter(i->i!=null).collect(Collectors.toList()));
 		
-		String[] strings = string.split("\n");
+		String[] strings = questionsString.split("\n");
+		AtomicInteger qstnNdx = new AtomicInteger();
 		for(int ndx=0;ndx<strings.length;ndx++)
 		{
 			if(strings[ndx].toLowerCase().contains("errata"))
@@ -32,7 +33,7 @@ public class Exam extends ArrayList<Question>
 			{
 				int answer = test.split("\\(")[1].charAt(0)-'A';
 				String question = strings[++ndx];
-				Question choices = new Question(question, answer);
+				Question choices = new Question(question, answer, qstnNdx.getAndIncrement());
 				AtomicInteger n = new AtomicInteger(ndx++);
 				IntStream.range(0, 4).mapToObj(i->strings[n.incrementAndGet()]).forEach(s->choices.add(s));
 				add(choices);

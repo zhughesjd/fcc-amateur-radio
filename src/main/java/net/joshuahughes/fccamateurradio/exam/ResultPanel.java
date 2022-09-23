@@ -12,9 +12,9 @@ public class ResultPanel extends JTextArea
 	Result result;
 	public ResultPanel(){}
 	
-	public void setTest(Exam test)
+	public void setExam(Exam exam)
 	{
-		list.add(this.result = new Result(test));
+		list.add(this.result = new Result(exam));
 		update();
 	}
 	public void store(Point qc)
@@ -26,7 +26,8 @@ public class ResultPanel extends JTextArea
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(getName());
-		list.stream().forEach(r->{
+		list.stream().forEach(r->
+		{
 			sb.append(r.toString());	
 		});
 		setText(sb.toString());
