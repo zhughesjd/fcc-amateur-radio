@@ -5,7 +5,6 @@ import static com.metsci.glimpse.docking.DockingUtils.setArrangementAndSaveOnDis
 import static com.metsci.glimpse.docking.DockingWindowTitlers.createDefaultWindowTitler;
 import static java.awt.Dialog.ModalityType.MODELESS;
 
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +17,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
@@ -49,7 +47,8 @@ public class FccAmateurRadioExam extends DockingGroupDialog
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
 	ResultPanel resultPnl = new ResultPanel();
-	AtomicInteger questionNdx = new AtomicInteger(0);
+	boolean appendWrong = false;
+	Question previousQuestion;
 	Exam exam;
 	public FccAmateurRadioExam()
 	{
@@ -70,11 +69,12 @@ public class FccAmateurRadioExam extends DockingGroupDialog
 			update((Integer) l.getNewValue());
 		});
 	}
-	public void set(Exam newExam)
+	public void set(Exam newExam, boolean appendWrong)
 	{	
+		this.appendWrong = appendWrong;
+		if(newExam.isEmpty()) return;
 		exam = newExam;
 		resultPnl.setExam(exam);
-		questionNdx.set(0);
 		List<View> rmvList = views().entrySet().stream().filter(v->v.getValue().viewId.toLowerCase().contains("image")).map(e->e.getValue()).collect(Collectors.toList());
 		rmvList.stream().forEach(v->closeView(v));
 		IntStream.range(0, exam.getImages().size()).mapToObj(i->new View("image"+i, new JScrollPane(new JLabel(new ImageIcon(exam.getImages().get(i).getScaledInstance(400, 300, BufferedImage.SCALE_SMOOTH)))), "image"+i)).forEach(v->addView(v));
@@ -82,11 +82,19 @@ public class FccAmateurRadioExam extends DockingGroupDialog
 	}
 	public void update(int c)
 	{
-		int qNdx = questionNdx.getAndIncrement();
-		currentPnl.setQuestion(qNdx>=exam.size()?Question.empty:exam.get(qNdx));
-		int ndx1 = qNdx-1;
-		resultPnl.store(new Point(ndx1,c));
-		previousPnl.setQuestion(ndx1<0?Question.empty:exam.get(ndx1),c);
+		if(previousQuestion!=null)
+		{
+			previousPnl.setQuestion(previousQuestion,c);
+			resultPnl.setQuestion(previousQuestion,c);
+		}
+		if(exam.isEmpty())
+		{
+			currentPnl.setQuestion(Question.empty);
+			return;
+		}
+		if(previousQuestion!=null && c != previousQuestion.getAnswer() && appendWrong)
+			exam.add(previousQuestion);
+		currentPnl.setQuestion(previousQuestion = exam.remove(0));
 	}
 	public static Exam convert(File file)
 	{
@@ -159,6 +167,6 @@ public class FccAmateurRadioExam extends DockingGroupDialog
 		test.resultPnl.setName(prefix.toString());
 		test.setVisible(true);
 		Exam exam = startPanel.getList().get(0);
-		test.set(exam);
+		test.set(exam,startPanel.appendWrong());
 	}
 }

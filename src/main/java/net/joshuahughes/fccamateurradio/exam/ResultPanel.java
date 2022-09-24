@@ -1,6 +1,5 @@
 package net.joshuahughes.fccamateurradio.exam;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JTextArea;
@@ -17,11 +16,6 @@ public class ResultPanel extends JTextArea
 		list.add(this.result = new Result(exam));
 		update();
 	}
-	public void store(Point qc)
-	{
-		result.process(qc.x,qc.y);
-		update();
-	}
 	private void update()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -35,6 +29,12 @@ public class ResultPanel extends JTextArea
 	public void setName(String name)
 	{
 		super.setName(name);
+		update();
+	}
+
+	public void setQuestion(Question question, int c)
+	{
+		result.put(question, question.getAnswer()==c);
 		update();
 	}
 }
