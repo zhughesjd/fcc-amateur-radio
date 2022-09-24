@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
@@ -42,9 +41,8 @@ import net.joshuahughes.fccamateurradio.examination.exam.Exam;
 import net.joshuahughes.fccamateurradio.examination.ui.question.ChoicePanel;
 import net.joshuahughes.fccamateurradio.examination.ui.question.DisplayPanel;
 
-public class ExamPanel extends DockingGroupDialog 
+public class ExamDialog extends DockingGroupDialog 
 {
-	public static Random rnd = new Random(System.currentTimeMillis());
 	LinkedHashSet<JDialog> dlgSet = new LinkedHashSet<>();
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
@@ -52,11 +50,11 @@ public class ExamPanel extends DockingGroupDialog
 	boolean appendWrong = false;
 	Question previousQuestion;
 	Exam exam;
-	public ExamPanel()
+	public ExamDialog()
 	{
 		super(null, MODELESS, DISPOSE_ALL_FRAMES );
         addListener( createDefaultWindowTitler( "Docking Example" ) );
-        setArrangementAndSaveOnDispose( this, ExamPanel.class.getName(), ModalDialogDockingExample.class.getResource( "docking/simple-arrangement-default.xml" ) );
+        setArrangementAndSaveOnDispose( this, ExamDialog.class.getName(), ModalDialogDockingExample.class.getResource( "docking/simple-arrangement-default.xml" ) );
 		addViews
 		(
 			new View[] 
@@ -158,17 +156,17 @@ public class ExamPanel extends DockingGroupDialog
 	}
 	public static void main(String[] args) throws Exception
 	{
-		URL pathUrl = ExamPanel.class.getClassLoader().getResource("docx/");
+		URL pathUrl = ExamDialog.class.getClassLoader().getResource("docx/");
 		List<Exam> list = Arrays.stream(new File(pathUrl.getFile()).listFiles()).map(f->convert(f)).filter(t->t!=null).collect(Collectors.toList());
 		StringBuilder prefix = new StringBuilder();
 		list.forEach(e->prefix.append(answerStats(e)));
 		StartPanel startPanel = new StartPanel(list);
 		if(JOptionPane.OK_OPTION != JOptionPane.showConfirmDialog(null, startPanel,"select below",JOptionPane.OK_CANCEL_OPTION))
 			return;
-		ExamPanel test = new ExamPanel();
-		test.resultPnl.setName(prefix.toString());
-		test.setVisible(true);
+		ExamDialog dialog = new ExamDialog();
+		dialog.resultPnl.setName(prefix.toString());
+		dialog.setVisible(true);
 		Exam exam = startPanel.getList().get(0);
-		test.set(exam,startPanel.appendWrong());
+		dialog.set(exam,startPanel.appendWrong());
 	}
 }

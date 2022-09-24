@@ -19,8 +19,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
+import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.exam.Exam;
-import net.joshuahughes.fccamateurradio.examination.exam.FccAmateurRadioExam;
 
 public class StartPanel extends JPanel
 {
@@ -125,7 +125,7 @@ public class StartPanel extends JPanel
 			testList.add(newTest);
 			ArrayList<Question> questions = new ArrayList<>(test);
 			if(random.isSelected())
-				Collections.shuffle(questions,FccAmateurRadioExam.rnd);
+				Collections.shuffle(questions,Utility.rnd);
 			if(reverse.isSelected())
 				Collections.reverse(questions);
 			IntStream.range(0, cnt).forEach(i->newTest.add(questions.get(i)));
