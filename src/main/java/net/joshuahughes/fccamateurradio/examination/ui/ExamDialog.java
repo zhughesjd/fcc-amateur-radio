@@ -47,7 +47,7 @@ public class ExamDialog extends DockingGroupDialog
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
 	ResultPanel resultPnl = new ResultPanel();
-	boolean appendWrong = false;
+	boolean correctMissed = false;
 	Question previousQuestion;
 	Exam exam;
 	public ExamDialog()
@@ -69,9 +69,9 @@ public class ExamDialog extends DockingGroupDialog
 			update((Integer) l.getNewValue());
 		});
 	}
-	public void set(Exam newExam, boolean appendWrong)
+	public void set(Exam newExam, boolean correctMissed)
 	{	
-		this.appendWrong = appendWrong;
+		this.correctMissed = correctMissed;
 		if(newExam.isEmpty()) return;
 		exam = newExam;
 		resultPnl.setExam(exam);
@@ -92,8 +92,10 @@ public class ExamDialog extends DockingGroupDialog
 			currentPnl.setQuestion(Question.empty);
 			return;
 		}
-		if(previousQuestion!=null && c != previousQuestion.getAnswer() && appendWrong)
+		if(previousQuestion!=null && c != previousQuestion.getAnswer() && correctMissed)
+		{
 			exam.add(previousQuestion);
+		}
 		currentPnl.setQuestion(previousQuestion = exam.remove(0));
 	}
 	public static Exam convert(File file)
@@ -167,6 +169,6 @@ public class ExamDialog extends DockingGroupDialog
 		dialog.resultPnl.setName(prefix.toString());
 		dialog.setVisible(true);
 		Exam exam = startPanel.getList().get(0);
-		dialog.set(exam,startPanel.appendWrong());
+		dialog.set(exam,startPanel.correctMissed());
 	}
 }

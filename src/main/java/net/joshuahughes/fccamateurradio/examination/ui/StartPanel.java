@@ -43,7 +43,7 @@ public class StartPanel extends JPanel
 	
 	JButton fcc = new JButton("FCC test");
 	JButton all = new JButton("all");
-	JCheckBox appendWrong = new JCheckBox("fix incorrect",false);
+	JCheckBox correctMissed = new JCheckBox("correct missed",false);
 	LinkedHashMap<JCheckBox,Exam> boxTestMap;
 	
 	public StartPanel(List<Exam> list)
@@ -108,7 +108,7 @@ public class StartPanel extends JPanel
 		gbc.gridy++;
 		add(fcc,gbc);
 		gbc.gridy++;
-		add(appendWrong,gbc);
+		add(correctMissed,gbc);
 
 	}
 	public List<Exam> getList()
@@ -143,8 +143,8 @@ public class StartPanel extends JPanel
 					map.put(boxes[b],tests[n]);
 		return map;
 	}
-	public boolean appendWrong()
+	public boolean correctMissed()
 	{
-		return false;
+		return correctMissed.isSelected();
 	}
 }
