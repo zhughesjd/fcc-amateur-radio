@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.exam;
+package net.joshuahughes.fccamateurradio.examination.ui;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -17,6 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
+import net.joshuahughes.fccamateurradio.examination.Question;
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
+import net.joshuahughes.fccamateurradio.examination.exam.FccAmateurRadioExam;
 
 public class StartPanel extends JPanel
 {

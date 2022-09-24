@@ -1,8 +1,10 @@
-package net.joshuahughes.fccamateurradio.exam;
+package net.joshuahughes.fccamateurradio.examination;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
+
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
 
 public class Result extends LinkedHashMap<Question,Boolean>
 {

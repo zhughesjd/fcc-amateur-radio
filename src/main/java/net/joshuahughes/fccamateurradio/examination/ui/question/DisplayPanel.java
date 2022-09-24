@@ -1,6 +1,6 @@
-package net.joshuahughes.fccamateurradio.exam.ui.question;
+package net.joshuahughes.fccamateurradio.examination.ui.question;
 
-import net.joshuahughes.fccamateurradio.exam.Question;
+import net.joshuahughes.fccamateurradio.examination.Question;
 
 public class DisplayPanel extends QuestionPanel{
 	private static final long serialVersionUID = 2491924100626019042L;

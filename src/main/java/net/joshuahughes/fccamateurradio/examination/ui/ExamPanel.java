@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.exam;
+package net.joshuahughes.fccamateurradio.examination.ui;
 
 import static com.metsci.glimpse.docking.DockingFrameCloseOperation.DISPOSE_ALL_FRAMES;
 import static com.metsci.glimpse.docking.DockingUtils.setArrangementAndSaveOnDispose;
@@ -37,8 +37,10 @@ import com.metsci.glimpse.docking.View;
 import com.metsci.glimpse.docking.examples.ModalDialogDockingExample;
 import com.metsci.glimpse.docking.group.dialog.DockingGroupDialog;
 
-import net.joshuahughes.fccamateurradio.exam.ui.question.ChoicePanel;
-import net.joshuahughes.fccamateurradio.exam.ui.question.DisplayPanel;
+import net.joshuahughes.fccamateurradio.examination.Question;
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
+import net.joshuahughes.fccamateurradio.examination.ui.question.ChoicePanel;
+import net.joshuahughes.fccamateurradio.examination.ui.question.DisplayPanel;
 
 public class ExamPanel extends DockingGroupDialog 
 {

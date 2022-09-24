@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.exam;
+package net.joshuahughes.fccamateurradio.examination.exam;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import net.joshuahughes.fccamateurradio.examination.Question;
 
 public class Exam extends ArrayList<Question>
 {

@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.exam.ui.question;
+package net.joshuahughes.fccamateurradio.examination.ui.question;
 
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import javax.swing.JRadioButton;
 
-import net.joshuahughes.fccamateurradio.exam.Question;
+import net.joshuahughes.fccamateurradio.examination.Question;
 
 public class ChoicePanel extends QuestionPanel
 {

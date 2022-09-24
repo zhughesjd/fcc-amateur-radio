@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.exam;
+package net.joshuahughes.fccamateurradio.examination;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;

@@ -1,8 +1,12 @@
-package net.joshuahughes.fccamateurradio.exam;
+package net.joshuahughes.fccamateurradio.examination.ui;
 
 import java.util.ArrayList;
 
 import javax.swing.JTextArea;
+
+import net.joshuahughes.fccamateurradio.examination.Question;
+import net.joshuahughes.fccamateurradio.examination.Result;
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
 
 public class ResultPanel extends JTextArea
 {

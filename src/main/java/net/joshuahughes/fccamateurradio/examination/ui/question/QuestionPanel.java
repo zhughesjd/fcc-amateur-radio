@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.exam.ui.question;
+package net.joshuahughes.fccamateurradio.examination.ui.question;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
-import net.joshuahughes.fccamateurradio.exam.Question;
+import net.joshuahughes.fccamateurradio.examination.Question;
 
 public class QuestionPanel extends JPanel
 {
