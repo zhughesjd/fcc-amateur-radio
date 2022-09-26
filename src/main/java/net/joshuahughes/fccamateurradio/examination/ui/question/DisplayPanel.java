@@ -4,12 +4,10 @@ import net.joshuahughes.fccamateurradio.examination.Question;
 
 public class DisplayPanel extends QuestionPanel{
 	private static final long serialVersionUID = 2491924100626019042L;
-	public void setQuestion(Question qstn,int choice)
+	public void setQuestion(Question qstn)
 	{
 		super.setQuestion(qstn);
-		if(0<=choice && choice<question.size())
-			chcs.get(choice).setBackground(wrongBG);
-		if(0<=question.getAnswer() && question.getAnswer()<question.size())
-			chcs.get(question.getAnswer()).setBackground(rightBG);
+		if(qstn.getSelection()>=0) chcs.get(qstn.getSelection()).setBackground(wrongBG);
+		if(qstn.getAnswer()>=0) chcs.get(qstn.getAnswer()).setBackground(rightBG);
 	}
 }

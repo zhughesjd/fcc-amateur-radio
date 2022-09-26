@@ -51,6 +51,7 @@ public class ChoicePanel extends QuestionPanel
 				if(question == null) return;
 				Optional<JRadioButton> op = chcs.stream().filter(b->b.isSelected()).findAny();
 				int choice = op.isPresent()?chcs.indexOf(op.get()):-1;
+				question.setSelection(choice);
 				ChoicePanel.this.firePropertyChange(ChoicePanel.class.getCanonicalName(), null,new Integer(choice));
 			});
 		});

@@ -3,12 +3,9 @@ package net.joshuahughes.fccamateurradio.examination.ui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,63 +15,51 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import net.joshuahughes.fccamateurradio.examination.Question;
-import net.joshuahughes.fccamateurradio.examination.Utility;
-import net.joshuahughes.fccamateurradio.examination.exam.Exam;
+import net.joshuahughes.fccamateurradio.examination.Exam;
 
 public class StartPanel extends JPanel
 {
 	private static final long serialVersionUID = 731131016262512964L;
 	
-	JCheckBox techBox = new JCheckBox("technician",true);
-	JSpinner techSpnr = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
-	JCheckBox gnrlBox = new JCheckBox("general",true);
-	JSpinner gnrlSpnr = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
-	JCheckBox xtraBox = new JCheckBox("extra",true);
-	JSpinner xtraSpnr = new JSpinner(new SpinnerNumberModel(20, 1, Integer.MAX_VALUE, 1));
-
-	JCheckBox[] boxes = {techBox,gnrlBox,xtraBox};
-	JSpinner[] spnrs = {techSpnr,gnrlSpnr,xtraSpnr};
-	
-	JRadioButton random = new JRadioButton("random");
-	JRadioButton sequential = new JRadioButton("sequential");
-	JRadioButton reverse = new JRadioButton("reverse");
-	ButtonGroup typeGrp = new ButtonGroup();
-	
+	LinkedHashMap<JRadioButton,File> fileMap = new LinkedHashMap<>();
+	LinkedHashMap<JRadioButton,Exam.Ordering> orderMap = new LinkedHashMap<>();
+	JSpinner count = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
 	JButton fcc = new JButton("FCC test");
 	JButton all = new JButton("all");
 	JCheckBox correctMissed = new JCheckBox("correct missed",false);
-	LinkedHashMap<JCheckBox,Exam> boxTestMap;
+	ButtonGroup fileGrp = new ButtonGroup();
+	ButtonGroup orderGrp = new ButtonGroup();
 	
-	public StartPanel(List<Exam> list)
+	public StartPanel()
 	{
-		boxTestMap = getBoxTestMap(boxes, list.toArray(new Exam[0]));
-		typeGrp.add(random);
-		typeGrp.add(sequential);
-		typeGrp.add(reverse);
-		random.setSelected(true);
-		IntStream.range(0, boxes.length).forEach(i->
+		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
+		Arrays.asList(file.listFiles()).forEach(f->
 		{
-			boxes[i].addChangeListener(l->spnrs[i].setEnabled(boxes[i].isSelected()));
-			spnrs[i].setPreferredSize(new Dimension(50,25));
+			JRadioButton b = new JRadioButton(f.getName());
+			fileGrp.add(b);
+			fileMap.put(b, f);
 		});
-		techBox.addChangeListener(l->techSpnr.setEnabled(techBox.isSelected()));
-		gnrlBox.addChangeListener(l->gnrlSpnr.setEnabled(gnrlBox.isSelected()));
-		xtraBox.addChangeListener(l->xtraSpnr.setEnabled(xtraBox.isSelected()));
-		Stream.of(techSpnr,gnrlSpnr,xtraSpnr).forEach(s->s.setPreferredSize(new Dimension(50,25)));
-		all.addActionListener(l->IntStream.range(0, boxes.length).forEach(b->
+		
+		Arrays.asList(Exam.Ordering.values()).forEach(o->
 		{
-			JCheckBox box = boxes[b];
-			if(boxTestMap.containsKey(box))
-				spnrs[b].setValue(boxTestMap.get(box).size());
-		}));
-		fcc.addActionListener(l->IntStream.range(0, boxes.length).forEach(b->
+			JRadioButton b = new JRadioButton(o.name());
+			orderGrp.add(b);
+			orderMap.put(b, o);
+		});
+
+		count.setPreferredSize(new Dimension(50,25));
+
+		all.addActionListener(l->
 		{
-			JCheckBox box = boxes[b];
-			if(boxTestMap.containsKey(box))
-			
-				spnrs[b].setValue(box.getText().toLowerCase().contains("extra")?50:32);
-		}));
+			count.setValue(Integer.MAX_VALUE);	
+		});
+		fcc.addActionListener(l->
+		{
+			JRadioButton btn = fileMap.keySet().stream().filter(box->box.isSelected()).findFirst().get();
+			count.setValue(btn.getText().toLowerCase().contains("extra")?50:32);	
+		});
+		fileMap.keySet().stream().filter(r->r.getText().toLowerCase().contains("technician")).findAny().get().setSelected(true);
+		orderMap.keySet().stream().filter(r->r.getText().toLowerCase().contains("random")).findAny().get().setSelected(true);
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -82,25 +67,27 @@ public class StartPanel extends JPanel
 		gbc.gridx = gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.LINE_START;
 
-		IntStream.range(0, boxes.length).forEach(i->
-		{
-			if(boxTestMap.keySet().contains(boxes[i]))
-			{
-				add(boxes[i],gbc);
-				gbc.gridx++;
-				add(spnrs[i],gbc);
-				gbc.gridy++;
-				gbc.gridx=0;
-			}
-		});
-		add(new JPanel(),gbc);
 		gbc.gridy++;
-		
-		Collections.list(typeGrp.getElements()).stream().forEach(b->
+		add(new JPanel(),gbc);
+		fileMap.keySet().forEach(f->
 		{
-			add(b,gbc);
 			gbc.gridy++;
+			add(f,gbc);
 		});
+		
+		gbc.gridy++;
+		add(new JPanel(),gbc);
+
+		gbc.gridy++;
+		add(count,gbc);
+
+		orderMap.keySet().forEach(o->
+		{
+			gbc.gridy++;
+			add(o,gbc);
+		});
+
+		gbc.gridy++;
 		add(new JPanel(),gbc);
 
 		gbc.gridy++;
@@ -109,39 +96,16 @@ public class StartPanel extends JPanel
 		add(fcc,gbc);
 		gbc.gridy++;
 		add(correctMissed,gbc);
-
 	}
-	public List<Exam> getList()
+	public Exam getExam()
 	{
-		List<Exam> testList = new ArrayList<>();
-		for(int b=0;b<boxes.length;b++)
-		{
-			JCheckBox box = boxes[b];
-			if(!box.isSelected()) continue;
-			Exam test = boxTestMap.get(box);
-			if(test == null || test.size()<=0) continue;
-			Integer cnt = (Integer)spnrs[b].getValue();
-			Exam newTest = new Exam(test.toString(),"",test.getImages());
-			testList.add(newTest);
-			ArrayList<Question> questions = new ArrayList<>(test);
-			if(random.isSelected())
-				Collections.shuffle(questions,Utility.rnd);
-			if(reverse.isSelected())
-				Collections.reverse(questions);
-			IntStream.range(0, cnt).forEach(i->newTest.add(questions.get(i)));
-		}
-		return testList ;
-
-	}
-	public static LinkedHashMap<JCheckBox,Exam> getBoxTestMap(JCheckBox[] boxes,Exam[] tests)
-	{
-		String[] names = Stream.of(tests).map(t->t.toString().toLowerCase()).toArray(String[]::new);
-		LinkedHashMap<JCheckBox, Exam> map = new LinkedHashMap<>();
-		for(int b=0;b<boxes.length;b++)
-			for(int n=0;n<names.length;n++)
-				if(names[n].contains(boxes[b].getText().toLowerCase()))
-					map.put(boxes[b],tests[n]);
-		return map;
+		Exam exam = new Exam();
+		exam.set(
+				fileMap.get(fileMap.keySet().stream().filter(b->b.isSelected()).findAny().get()),
+				(Integer)count.getModel().getValue(),
+				correctMissed.isSelected(),
+				orderMap.get(orderMap.keySet().parallelStream().filter(o->o.isSelected()).findAny().get()));
+		return exam;
 	}
 	public boolean correctMissed()
 	{

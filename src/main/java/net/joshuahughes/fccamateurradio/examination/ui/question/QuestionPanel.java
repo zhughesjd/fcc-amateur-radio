@@ -24,7 +24,7 @@ public class QuestionPanel extends JPanel
 	JLabel qstn = new JLabel();
 	ButtonGroup chcGrp = new ButtonGroup();
 	ArrayList<JRadioButton> chcs = new ArrayList<>(IntStream.range(0, 4).mapToObj(i->new JRadioButton()).collect(Collectors.toList()));
-	Question question = null;
+	Question question = Question.empty;
 	public QuestionPanel()
 	{
 		super(new GridBagLayout());
@@ -50,6 +50,10 @@ public class QuestionPanel extends JPanel
 	{
 		question = qstn;
 		updateComponents();
+	}
+	public Question getQuestion()
+	{
+		return question;
 	}
 	public void updateComponents()
 	{
