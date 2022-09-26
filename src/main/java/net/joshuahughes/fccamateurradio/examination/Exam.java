@@ -70,6 +70,7 @@ public class Exam extends ArrayList<Question>
 					clear();
 					continue;
 				}
+				String previous = strings[ndx];
 				String test = strings[ndx].replaceAll("\\s+","");
 				if(test.length()<8) continue;
 				test = test.substring(0,8);
@@ -77,7 +78,7 @@ public class Exam extends ArrayList<Question>
 				{
 					int answer = test.split("\\(")[1].charAt(0)-'A';
 					String questionString = strings[++ndx];
-					Question question = new Question(questionString, answer, qstnNdx.getAndIncrement());
+					Question question = new Question(previous,questionString, answer, qstnNdx.getAndIncrement());
 					AtomicInteger n = new AtomicInteger(ndx++);
 					IntStream.range(0, 4).mapToObj(i->strings[n.incrementAndGet()]).forEach(s->question.add(s));
 					qList.add(question);

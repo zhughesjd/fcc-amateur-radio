@@ -21,6 +21,7 @@ public class QuestionPanel extends JPanel
 	Color defltBG = new JToggleButton().getBackground();
 	Color rightBG = Color.green;
 	Color wrongBG = Color.red;
+	JLabel prev = new JLabel();
 	JLabel qstn = new JLabel();
 	ButtonGroup chcGrp = new ButtonGroup();
 	ArrayList<JRadioButton> chcs = new ArrayList<>(IntStream.range(0, 4).mapToObj(i->new JRadioButton()).collect(Collectors.toList()));
@@ -32,6 +33,9 @@ public class QuestionPanel extends JPanel
 		gbc.weightx = gbc.weighty = 1;
 		gbc.gridx = gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.LINE_START;
+		add(prev,gbc);
+		
+		gbc.gridy++;
 		add(qstn,gbc);
 
 		gbc.gridy++;
@@ -42,9 +46,6 @@ public class QuestionPanel extends JPanel
 			gbc.gridy++;
 			add(chcs.get(x),gbc);
 		}
-
-		gbc.gridy++;
-		add(new JPanel(),gbc);
 	}
 	public void setQuestion(Question qstn)
 	{

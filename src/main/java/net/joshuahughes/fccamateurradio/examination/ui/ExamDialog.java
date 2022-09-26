@@ -78,6 +78,11 @@ public class ExamDialog extends DockingGroupDialog
 			currentPnl.setQuestion(Question.empty);
 		}
 	}
+	public void setVisible(boolean visible)
+	{
+		super.setVisible(visible);
+		currentPnl.requestFocus();
+	}
 	public static void main(String[] args) throws Exception
 	{
 		StartPanel startPanel = new StartPanel();

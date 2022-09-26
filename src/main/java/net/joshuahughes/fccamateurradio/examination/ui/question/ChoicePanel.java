@@ -31,8 +31,7 @@ public class ChoicePanel extends QuestionPanel
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if(e.getKeyChar() == 'h' && tglBG.equals(defltBG))
-					getRadioAnswer().setBackground(defltBG);
+				prev.setText("");
 			}
 			
 			@Override
@@ -40,7 +39,8 @@ public class ChoicePanel extends QuestionPanel
 			{
 				if(e.getKeyChar() == 'h')
 				{
-					getRadioAnswer().setBackground(rightBG);
+					if(question!=null)
+						prev.setText(question.getPrevious());
 				}
 			}
 		});

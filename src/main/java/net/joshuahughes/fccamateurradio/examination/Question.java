@@ -10,20 +10,23 @@ public class Question extends ArrayList<String>
 {
 	public enum State{right,wrong,remaining}
 	public static final String propertyName = Question.class.getCanonicalName();
-	public static final Question empty = new Question("empty", -1,-1);
+	public static final Question empty = new Question("previous","empty", -1,-1);
 	static {IntStream.range(0, 4).forEach(i->empty.add(""));}
 	private static final long serialVersionUID = -6805931509053989701L;
 	JPanel handler = new JPanel();
 	int selection = -1;
+	String previous;
 	String question;
 	int answer;
 	int index;
-	public Question(String question, int answer, int index)
+	public Question(String previous,String question, int answer, int index)
 	{
+		this.previous = previous;
 		this.question = question;
 		this.answer = answer;
 		this.index = index;
 	}
+	public String getPrevious() {return previous;}
 	public int getAnswer() {return answer;}
 	public int getIndex() {return index;}
 	public int getSelection() {return selection;}
