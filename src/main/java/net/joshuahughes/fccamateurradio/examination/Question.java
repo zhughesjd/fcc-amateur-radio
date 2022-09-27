@@ -27,10 +27,11 @@ public class Question extends ArrayList<String>
 		this.index = index;
 	}
 	public String getPrevious() {return previous;}
+	public String getQuestion() {return question;}
 	public int getAnswer() {return answer;}
 	public int getIndex() {return index;}
 	public int getSelection() {return selection;}
-	public int setSelection(int selection) 
+	public int setSelection(int selection)
 	{
 		handler.firePropertyChange(propertyName, selection != answer, selection == answer);
 		if(this.selection==selection) return selection;

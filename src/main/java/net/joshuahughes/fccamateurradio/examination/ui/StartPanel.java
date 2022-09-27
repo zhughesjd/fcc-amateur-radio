@@ -1,5 +1,6 @@
 package net.joshuahughes.fccamateurradio.examination.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,12 +11,15 @@ import java.util.LinkedHashMap;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import net.joshuahughes.fccamateurradio.examination.Exam;
+import net.joshuahughes.fccamateurradio.examination.Utility;
 
 public class StartPanel extends JPanel
 {
@@ -29,13 +33,15 @@ public class StartPanel extends JPanel
 	JCheckBox correctMissed = new JCheckBox("correct missed",true);
 	ButtonGroup fileGrp = new ButtonGroup();
 	ButtonGroup orderGrp = new ButtonGroup();
+	JTextField contains = new JTextField();
 	
 	public StartPanel()
 	{
 		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
 		Arrays.asList(file.listFiles()).forEach(f->
 		{
-			JRadioButton b = new JRadioButton(f.getName());
+			Utility.Class cls =Arrays.asList(Utility.Class.values()).stream().filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
+			JRadioButton b = new JRadioButton(cls.name());
 			fileGrp.add(b);
 			fileMap.put(b, f);
 		});
@@ -56,12 +62,22 @@ public class StartPanel extends JPanel
 		fcc.addActionListener(l->
 		{
 			JRadioButton btn = fileMap.keySet().stream().filter(box->box.isSelected()).findFirst().get();
-			count.setValue(btn.getText().toLowerCase().contains("extra")?50:32);	
+			count.setValue(Utility.Class.valueOf(btn.getText()).getQuestionCount());
 		});
 		fileMap.keySet().stream().filter(r->r.getText().toLowerCase().contains("technician")).findAny().get().setSelected(true);
 		orderMap.keySet().stream().filter(r->r.getText().toLowerCase().contains("random")).findAny().get().setSelected(true);
 		
 		setLayout(new GridBagLayout());
+		JPanel countPnl = new JPanel(new BorderLayout());
+		countPnl.add(new JLabel("count: "),BorderLayout.CENTER);
+		countPnl.add(count,BorderLayout.EAST);
+
+		JPanel containsPnl = new JPanel(new BorderLayout());
+		containsPnl.add(new JLabel("match: "),BorderLayout.WEST);
+		containsPnl.add(contains,BorderLayout.CENTER);
+		containsPnl.setPreferredSize(new Dimension(150, contains.getPreferredSize().height));
+
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.weightx = gbc.weighty = 1;
 		gbc.gridx = gbc.gridy = 0;
@@ -79,7 +95,11 @@ public class StartPanel extends JPanel
 		add(new JPanel(),gbc);
 
 		gbc.gridy++;
-		add(count,gbc);
+		add(containsPnl,gbc);
+
+		gbc.gridy++;
+		add(countPnl,gbc);
+
 
 		orderMap.keySet().forEach(o->
 		{
@@ -104,7 +124,9 @@ public class StartPanel extends JPanel
 				fileMap.get(fileMap.keySet().stream().filter(b->b.isSelected()).findAny().get()),
 				(Integer)count.getModel().getValue(),
 				correctMissed.isSelected(),
-				orderMap.get(orderMap.keySet().parallelStream().filter(o->o.isSelected()).findAny().get()));
+				orderMap.get(orderMap.keySet().parallelStream().filter(o->o.isSelected()).findAny().get()),
+				contains.getText().toLowerCase()
+				);
 		return exam;
 	}
 	public boolean correctMissed()

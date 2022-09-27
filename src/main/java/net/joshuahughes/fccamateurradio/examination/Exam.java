@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,7 +33,7 @@ public class Exam extends ArrayList<Question>
 	boolean correctMistakes = true;
 	int ndx = 0;
 	String prefix = "";
-	public boolean set(File f, int count, boolean crtMstks, Ordering ordering)
+	public boolean set(File f, int count, boolean crtMstks, Ordering ordering, String contains)
 	{
 		ArrayList<Question> qList = new ArrayList<>();
 		try
@@ -82,6 +83,19 @@ public class Exam extends ArrayList<Question>
 				}
 			}
 			prefix = answerStats(qList);
+			Iterator<Question> it = qList.iterator();
+			String lo = contains.toLowerCase();
+			while(it.hasNext())
+			{
+				Question q = it.next();
+				if
+				(
+				!q.getQuestion().toLowerCase().contains(lo) &&
+				!q.getPrevious().toLowerCase().contains(lo) &&
+				!q.stream().anyMatch(s->s.toLowerCase().contains(lo))
+				)
+					it.remove();
+			}
 			if(ordering.equals(Ordering.reverse))
 				Collections.reverse(qList);
 			if(ordering.equals(Ordering.random))

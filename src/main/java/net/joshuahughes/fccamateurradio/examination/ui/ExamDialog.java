@@ -59,7 +59,7 @@ public class ExamDialog extends DockingGroupDialog
 		exam = newExam;
 		List<View> rmvList = views().entrySet().stream().filter(v->v.getValue().viewId.toLowerCase().contains("image")).map(e->e.getValue()).collect(Collectors.toList());
 		rmvList.stream().forEach(v->closeView(v));
-		IntStream.range(0, exam.getImages().size()).mapToObj(i->new View("image"+i, new JScrollPane(new JLabel(new ImageIcon(exam.getImages().get(i).getScaledInstance(400, 300, BufferedImage.SCALE_SMOOTH)))), "image"+i)).forEach(v->addView(v));
+		IntStream.range(0, exam.getImages().size()).mapToObj(i->new View("image_"+(i+1), new JScrollPane(new JLabel(new ImageIcon(exam.getImages().get(i).getScaledInstance(400, 300, BufferedImage.SCALE_SMOOTH)))), "image_"+(i+1))).forEach(v->addView(v));
 		update();
 	}
 	public void update()
