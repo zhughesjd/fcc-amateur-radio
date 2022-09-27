@@ -133,8 +133,6 @@ public class Exam extends ArrayList<Question>
 		Frequency singular = new Frequency(); 
 		Frequency inclusive = new Frequency(); 
 		ps.println("---------------------------------------------------------------");
-		ps.println(list.toString());
-		ps.println("---------------------------------------------------------------");
 		list.stream().forEach(q->
 		{
 			Frequency f =q.get(3).toLowerCase().contains("are correct")?inclusive:singular;

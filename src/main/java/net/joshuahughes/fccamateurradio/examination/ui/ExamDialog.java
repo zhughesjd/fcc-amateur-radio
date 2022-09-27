@@ -32,7 +32,7 @@ public class ExamDialog extends DockingGroupDialog
 	LinkedHashSet<JDialog> dlgSet = new LinkedHashSet<>();
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
-	JTextArea resultPnl = new JTextArea();
+	JTextArea textArea = new JTextArea();
 	Exam exam;
 	public ExamDialog()
 	{
@@ -45,7 +45,7 @@ public class ExamDialog extends DockingGroupDialog
 			{
 				new View(0+"", currentPnl, "current"),
 				new View(1+"", previousPnl, "previous"),
-				new View(2+"", new JScrollPane(resultPnl), "result")
+				new View(2+"", new JScrollPane(textArea), "result")
 			}
 		);
 		currentPnl.addPropertyChangeListener(ChoicePanel.class.getCanonicalName(),l->
@@ -64,7 +64,7 @@ public class ExamDialog extends DockingGroupDialog
 	}
 	public void update()
 	{
-		resultPnl.setText(exam.getStats());
+		textArea.setText(exam.getStats());
 		if(exam.hasNext())
 		{
 			previousPnl.setQuestion(currentPnl.getQuestion());

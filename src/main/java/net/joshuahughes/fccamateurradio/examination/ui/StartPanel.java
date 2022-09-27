@@ -26,7 +26,7 @@ public class StartPanel extends JPanel
 	JSpinner count = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
 	JButton fcc = new JButton("FCC test");
 	JButton all = new JButton("all");
-	JCheckBox correctMissed = new JCheckBox("correct missed",false);
+	JCheckBox correctMissed = new JCheckBox("correct missed",true);
 	ButtonGroup fileGrp = new ButtonGroup();
 	ButtonGroup orderGrp = new ButtonGroup();
 	
