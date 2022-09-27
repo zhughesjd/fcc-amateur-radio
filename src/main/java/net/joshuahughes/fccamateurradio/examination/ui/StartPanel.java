@@ -53,11 +53,12 @@ public class StartPanel extends JPanel
 			orderMap.put(b, o);
 		});
 
-		count.setPreferredSize(new Dimension(50,25));
+		count.setPreferredSize(new Dimension(50,count.getPreferredSize().height));
 
 		all.addActionListener(l->
 		{
-			count.setValue(Integer.MAX_VALUE);	
+			JRadioButton btn = fileMap.keySet().stream().filter(box->box.isSelected()).findFirst().get();
+			count.setValue(Utility.Class.valueOf(btn.getText()).getPoolCount());
 		});
 		fcc.addActionListener(l->
 		{

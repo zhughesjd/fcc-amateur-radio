@@ -7,23 +7,31 @@ public class Utility
 	public static final Random rnd = new Random(System.currentTimeMillis());
 	public enum Class
 	{
-		technician(35,26),general(35,26),extra(50,37);
+		technician(412,35,26),general(454,35,26),extra(622,50,37);
 	
+		private int poolCount;
 		private int questionCount;
-		private int passing;
+		private int passingCount;
 	
-		Class(int q, int p)
+		Class(int plCnt,int qstnCnt, int pssCnt)
 		{
-			questionCount = q;
-			passing = p;
+			poolCount = plCnt;
+			questionCount = qstnCnt;
+			passingCount = pssCnt;
 		}
 	
-		public int getQuestionCount() {
+		public int getPoolCount()
+		{
+			return poolCount;
+		}
+		public int getQuestionCount()
+		{
 			return questionCount;
 		}
 	
-		public int getPassing() {
-			return passing;
+		public int getPassingCount()
+		{
+			return passingCount;
 		}
 	}
 }
