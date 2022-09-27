@@ -28,21 +28,6 @@ public class ChoicePanel extends QuestionPanel
 					getRadioAnswer().setBackground(tglBG);
 				}
 			}
-			@Override
-			public void keyReleased(KeyEvent e)
-			{
-				prev.setText("");
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) 
-			{
-				if(e.getKeyChar() == 'h')
-				{
-					if(question!=null)
-						prev.setText(question.getPrevious());
-				}
-			}
 		});
 		chcs.stream().forEach(r->
 		{
@@ -56,10 +41,11 @@ public class ChoicePanel extends QuestionPanel
 			});
 		});
 	}
-	public void setQuestion(Question qstn)
+	public void setQuestion(Question q)
 	{
-		super.setQuestion(qstn);
-		if(qstn == Question.empty) return;
+		super.setQuestion(q);
+		if(question == Question.empty) return;
+		questionLbl.setToolTipText(question.getPrevious());
 		JRadioButton ra = getRadioAnswer();
 		ra.setBackground(tglBG);
 		requestFocus();

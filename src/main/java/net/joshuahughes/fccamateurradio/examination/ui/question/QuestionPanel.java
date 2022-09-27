@@ -22,7 +22,7 @@ public class QuestionPanel extends JPanel
 	Color rightBG = Color.green;
 	Color wrongBG = Color.red;
 	JLabel prev = new JLabel();
-	JLabel qstn = new JLabel();
+	JLabel questionLbl = new JLabel();
 	ButtonGroup chcGrp = new ButtonGroup();
 	ArrayList<JRadioButton> chcs = new ArrayList<>(IntStream.range(0, 4).mapToObj(i->new JRadioButton()).collect(Collectors.toList()));
 	Question question = Question.empty;
@@ -36,7 +36,7 @@ public class QuestionPanel extends JPanel
 		add(prev,gbc);
 		
 		gbc.gridy++;
-		add(qstn,gbc);
+		add(questionLbl,gbc);
 
 		gbc.gridy++;
 		add(new JPanel(),gbc);
@@ -58,7 +58,7 @@ public class QuestionPanel extends JPanel
 	}
 	public void updateComponents()
 	{
-		qstn.setText(question.toString());
+		questionLbl.setText(question.toString());
 		chcGrp.clearSelection();
 		chcs.stream().forEach(c->c.setBackground(defltBG));
 		IntStream.range(0, question.size()).forEach(i->

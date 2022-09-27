@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
@@ -46,21 +45,18 @@ public class Exam extends ArrayList<Question>
 			XWPFDocument doc = new XWPFDocument(fis);
 			POITextExtractor extractor = new XWPFWordExtractor(doc);
 			String questionsString = extractor.getText();
-			extractor.close();
-			List<BufferedImage> iList = doc.getAllPictures().stream().map(p->
+			doc.getAllPictures().stream().forEach(p->
 			{
 				try
 				{
-					return ImageIO.read(new ByteArrayInputStream(p.getData()));
-
+					imageList.add(ImageIO.read(new ByteArrayInputStream(p.getData())));
 				}
 				catch (Exception e)
 				{
-					return (BufferedImage)null;
+					e.printStackTrace();
 				}
-			}).collect(Collectors.toList());
-
-			imageList.addAll(new ArrayList<>(iList.stream().filter(i->i!=null).collect(Collectors.toList())));
+			});
+			extractor.close();
 			String[] strings = questionsString.split("\n");
 			AtomicInteger qstnNdx = new AtomicInteger();
 			for(int ndx=0;ndx<strings.length;ndx++)
