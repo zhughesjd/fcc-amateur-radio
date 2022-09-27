@@ -89,17 +89,21 @@ public class Exam extends ArrayList<Question>
 			{
 				Question q = it.next();
 				if
-				(
-				!q.getQuestion().toLowerCase().contains(lo) &&
-				!q.getPrevious().toLowerCase().contains(lo) &&
-				!q.stream().anyMatch(s->s.toLowerCase().contains(lo))
+					(
+					!q.getQuestion().toLowerCase().contains(lo) &&
+					!q.getPrevious().toLowerCase().contains(lo) &&
+					!q.stream().anyMatch(s->s.toLowerCase().contains(lo))
 				)
 					it.remove();
 			}
 			if(ordering.equals(Ordering.reverse))
 				Collections.reverse(qList);
 			if(ordering.equals(Ordering.random))
-				Collections.shuffle(qList,Utility.rnd);
+			{
+				ArrayList<Question> temp = new ArrayList<>(qList);
+				qList.clear();
+				IntStream.range(0, Math.min(count, temp.size())).forEach(i->qList.add(temp.remove(Utility.rnd.nextInt(temp.size()-1))));
+			}
 			IntStream.range(0, Math.min(count, qList.size())).forEach(i->add(qList.get(i)));
 			return true;
 		}
