@@ -2,22 +2,18 @@ package net.joshuahughes.fccamateurradio.examination;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.math3.stat.Frequency;
 import org.apache.poi.extractor.POITextExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -33,15 +29,15 @@ public class Exam extends ArrayList<Question>
 	boolean correctMistakes = true;
 	int ndx = 0;
 	String prefix = "";
-	public boolean set(File f, int count, boolean crtMstks, Ordering ordering, String contains)
+	public boolean set(File f, boolean crtMstks, Ordering ordering,int count,Predicate<Question> filter)
 	{
-		ArrayList<Question> qList = new ArrayList<>();
+		List<Question> qList = new ArrayList<>();
+		clear();
+		imageList.clear();
+		correctMistakes = crtMstks;
+		file = f;
 		try
 		{
-			clear();
-			imageList.clear();
-			correctMistakes = crtMstks;
-			file = f;
 			FileInputStream fis = new FileInputStream(file);
 			XWPFDocument doc = new XWPFDocument(fis);
 			POITextExtractor extractor = new XWPFWordExtractor(doc);
@@ -82,29 +78,17 @@ public class Exam extends ArrayList<Question>
 					ndx=n.get();
 				}
 			}
-			prefix = answerStats(qList);
-			Iterator<Question> it = qList.iterator();
-			String lo = contains.toLowerCase();
-			while(it.hasNext())
-			{
-				Question q = it.next();
-				if
-					(
-					!q.getQuestion().toLowerCase().contains(lo) &&
-					!q.getPrevious().toLowerCase().contains(lo) &&
-					!q.stream().anyMatch(s->s.toLowerCase().contains(lo))
-				)
-					it.remove();
-			}
+			prefix = Utility.answerStats(qList);
+			List<Question> fList = qList.stream().filter(q->filter.test(q)).collect(Collectors.toList());
 			if(ordering.equals(Ordering.reverse))
-				Collections.reverse(qList);
+				Collections.reverse(fList);
 			if(ordering.equals(Ordering.random))
 			{
-				ArrayList<Question> temp = new ArrayList<>(qList);
-				qList.clear();
-				IntStream.range(0, Math.min(count, temp.size())).forEach(i->qList.add(temp.remove(Utility.rnd.nextInt(temp.size()))));
+				ArrayList<Question> temp = new ArrayList<>(fList);
+				fList.clear();
+				IntStream.range(0, temp.size()).forEach(i->fList.add(temp.remove(Utility.rnd.nextInt(temp.size()))));
 			}
-			IntStream.range(0, Math.min(count, qList.size())).forEach(i->add(qList.get(i)));
+			IntStream.range(0, Math.min(count, fList.size())).forEach(i->add(fList.get(i)));
 			return true;
 		}
 		catch(Exception e)
@@ -138,53 +122,6 @@ public class Exam extends ArrayList<Question>
 	}
 	public String getStats()
 	{
-		return prefix+runningStats(this);
-	}
-	private static String answerStats(ArrayList<Question> list)
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
-		PrintStream ps = new PrintStream(baos);
-		Frequency singular = new Frequency(); 
-		Frequency inclusive = new Frequency(); 
-		ps.println("---------------------------------------------------------------");
-		list.stream().forEach(q->
-		{
-			Frequency f =q.get(3).toLowerCase().contains("are correct")?inclusive:singular;
-			f.addValue((char)(q.getAnswer()+'A'));
-		
-		});
-		ps.println("------- singular --------");
-		ps.println(toString(singular));
-		ps.println("------- inclusive --------");
-		ps.println(toString(inclusive));
-		ps.close();
-		return new String(baos.toByteArray());
-	}
-	private static String runningStats(Exam exam)
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
-		PrintStream ps = new PrintStream(baos);
-		long right = exam.stream().filter(q->q.getState().equals(State.right)).count();
-		long wrong = exam.stream().filter(q->q.getState().equals(State.wrong)).count();
-		long remaining = exam.stream().filter(q->q.getState().equals(State.remaining)).count();
-		ps.println("*****************************************");
-		ps.println("name: "+exam.toString());
-		ps.println("*********** running totals *****************");
-		ps.println("remaining: "+ remaining);
-		ps.println("right: "+right);
-		ps.println("wrong: "+wrong);
-		ps.printf("running score: %2.2f\n",100d*((double)right)/(double)(right+wrong));
-
-		
-		ps.close();
-		return new String(baos.toByteArray());
-	}
-	private static String toString(Frequency f)
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
-		PrintStream ps = new PrintStream(baos);
-		Iterable<Map.Entry<Comparable<?>,Long>> iterable = () -> f.entrySetIterator();
-		StreamSupport.stream(iterable.spliterator(), false).forEach(e->ps.println(e.getKey()+" -> "+f.getPct(e.getKey())));
-		return new String(baos.toByteArray());
+		return prefix+Utility.runningStats(this);
 	}
 }
