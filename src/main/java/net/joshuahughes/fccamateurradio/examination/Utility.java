@@ -10,10 +10,12 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.math3.stat.Frequency;
 
 import net.joshuahughes.fccamateurradio.examination.Question.State;
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
 
 public class Utility
 {
 	public static final Random rnd = new Random();
+	public enum Ordering{forward,reverse,random}
 	public enum Class
 	{
 		technician(412,35,26),general(454,35,26),extra(622,50,37);
@@ -71,7 +73,6 @@ public class Utility
 		long wrong = exam.stream().filter(q->q.getState().equals(State.wrong)).count();
 		long remaining = exam.stream().filter(q->q.getState().equals(State.remaining)).count();
 		ps.println("*****************************************");
-		ps.println("name: "+exam.toString());
 		ps.println("*********** running totals *****************");
 		ps.println("remaining: "+ remaining);
 		ps.println("right: "+right);

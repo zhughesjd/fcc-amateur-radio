@@ -20,22 +20,23 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import net.joshuahughes.fccamateurradio.examination.Exam;
 import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.Utility;
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
+import net.joshuahughes.fccamateurradio.examination.exam.ExamDocx;
 
 public class StartPanel extends JPanel
 {
 	private static final long serialVersionUID = 731131016262512964L;
 	
 	LinkedHashMap<JRadioButton,File> fileMap = new LinkedHashMap<>();
-	LinkedHashMap<JRadioButton,Exam.Ordering> orderMap = new LinkedHashMap<>();
+	LinkedHashMap<JRadioButton,Utility.Ordering> orderMap = new LinkedHashMap<>();
 	JSpinner min = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-	JSpinner max = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
-	JSpinner cnt = new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
+	JSpinner max = new JSpinner(new SpinnerNumberModel(1000, 0, Integer.MAX_VALUE, 1));
+	JSpinner cnt = new JSpinner(new SpinnerNumberModel(1000, 0, Integer.MAX_VALUE, 1));
 	JButton fcc = new JButton("FCC test");
 	JButton all = new JButton("all");
-	JCheckBox correctMissed = new JCheckBox("correct missed",true);
+	JCheckBox fixMistakes = new JCheckBox("fix mistakes",true);
 	ButtonGroup fileGrp = new ButtonGroup();
 	ButtonGroup orderGrp = new ButtonGroup();
 	JTextField find = new JTextField();
@@ -51,7 +52,7 @@ public class StartPanel extends JPanel
 			fileMap.put(b, f);
 		});
 		
-		Arrays.asList(Exam.Ordering.values()).forEach(o->
+		Arrays.asList(Utility.Ordering.values()).forEach(o->
 		{
 			JRadioButton b = new JRadioButton(o.name());
 			orderGrp.add(b);
@@ -101,7 +102,7 @@ public class StartPanel extends JPanel
 		});
 		
 		gbc.gridy++;
-		add(correctMissed,gbc);
+		add(fixMistakes,gbc);
 
 		gbc.gridy++;
 		add(containsPnl,gbc);
@@ -146,19 +147,19 @@ public class StartPanel extends JPanel
 	}
 	public Exam getExam()
 	{
-		Exam exam = new Exam();
-		exam.set(
-				fileMap.get(fileMap.keySet().stream().filter(b->b.isSelected()).findAny().get()),
-				correctMissed.isSelected(),
-				orderMap.get(orderMap.keySet().parallelStream().filter(o->o.isSelected()).findAny().get()),
-				(int)cnt.getValue(),
-				find.getText().isEmpty()?index:substring
-				);
+		ExamDocx exam = new ExamDocx();
+		exam.set
+		(
+			fileMap.get(fileMap.keySet().stream().filter(b->b.isSelected()).findAny().get()),
+			orderMap.get(orderMap.keySet().parallelStream().filter(o->o.isSelected()).findAny().get()),
+			(int)cnt.getValue(),
+			find.getText().isEmpty()?index:substring
+		);
 		return exam;
 	}
 	public boolean correctMissed()
 	{
-		return correctMissed.isSelected();
+		return fixMistakes.isSelected();
 	}
 	Predicate<Question> index = q -> (int)min.getValue()<=q.getIndex() && q.getIndex()<=(int)max.getValue();
 	Predicate<Question> substring = q ->

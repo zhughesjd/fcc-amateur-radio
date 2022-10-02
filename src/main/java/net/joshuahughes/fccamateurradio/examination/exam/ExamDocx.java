@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.examination;
+package net.joshuahughes.fccamateurradio.examination.exam;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -18,23 +18,19 @@ import org.apache.poi.extractor.POITextExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import net.joshuahughes.fccamateurradio.examination.Question.State;
+import net.joshuahughes.fccamateurradio.examination.Question;
+import net.joshuahughes.fccamateurradio.examination.Utility;
 
-public class Exam extends ArrayList<Question>
+public class ExamDocx extends ArrayList<Question> implements Exam
 {
-	private static final long serialVersionUID = 7387093180348957357L;
-	public enum Ordering{forward,reverse,random}
+	private static final long serialVersionUID = -5592756316715145573L;
 	private File file = new File("");
 	private ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
-	boolean correctMistakes = true;
 	int ndx = 0;
 	String prefix = "";
-	public boolean set(File f, boolean crtMstks, Ordering ordering,int count,Predicate<Question> filter)
+	public void set(File f,Utility.Ordering ordering, int count, Predicate<Question> filter)
 	{
 		List<Question> qList = new ArrayList<>();
-		clear();
-		imageList.clear();
-		correctMistakes = crtMstks;
 		file = f;
 		try
 		{
@@ -78,49 +74,31 @@ public class Exam extends ArrayList<Question>
 					ndx=n.get();
 				}
 			}
-			prefix = Utility.answerStats(qList);
+			prefix =
+					"---------------------------\n" +
+					"---------------------------\n" +
+					Utility.answerStats(qList);
 			List<Question> fList = qList.stream().filter(q->filter.test(q)).collect(Collectors.toList());
-			if(ordering.equals(Ordering.reverse))
+			if(ordering.equals(Utility.Ordering.reverse))
 				Collections.reverse(fList);
-			if(ordering.equals(Ordering.random))
+			if(ordering.equals(Utility.Ordering.random))
 			{
 				ArrayList<Question> temp = new ArrayList<>(fList);
 				fList.clear();
 				IntStream.range(0, temp.size()).forEach(i->fList.add(temp.remove(Utility.rnd.nextInt(temp.size()))));
 			}
 			IntStream.range(0, Math.min(count, fList.size())).forEach(i->add(fList.get(i)));
-			return true;
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return false;
 		}
-		
-	}
-	public String toString()
-	{
-		return file.getAbsolutePath();
 	}
 	public List<BufferedImage> getImages()
 	{
 		return imageList;
 	}
-	public boolean hasNext()
-	{
-		if(!correctMistakes) return ndx<size();
-		return stream().filter(q->!q.getState().equals(State.right)).findAny().isPresent();
-	}
-	public Question next()
-	{
-		if(!hasNext()) return null;
-		if(!correctMistakes) return get(ndx++);
-		Question q = get((ndx++)%size());
-		while(q.getState().equals(State.right))
-			q = get((ndx++)%size());
-		return q;
-	}
-	public String getStats()
+	public String toString()
 	{
 		return prefix+Utility.runningStats(this);
 	}

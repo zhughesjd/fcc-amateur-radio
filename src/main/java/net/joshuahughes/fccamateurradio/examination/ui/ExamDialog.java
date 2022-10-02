@@ -6,6 +6,7 @@ import static com.metsci.glimpse.docking.DockingWindowTitlers.createDefaultWindo
 import static java.awt.Dialog.ModalityType.MODELESS;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,8 +23,8 @@ import com.metsci.glimpse.docking.View;
 import com.metsci.glimpse.docking.examples.ModalDialogDockingExample;
 import com.metsci.glimpse.docking.group.dialog.DockingGroupDialog;
 
-import net.joshuahughes.fccamateurradio.examination.Exam;
 import net.joshuahughes.fccamateurradio.examination.Question;
+import net.joshuahughes.fccamateurradio.examination.exam.Exam;
 import net.joshuahughes.fccamateurradio.examination.ui.question.ChoicePanel;
 import net.joshuahughes.fccamateurradio.examination.ui.question.DisplayPanel;
 
@@ -33,7 +34,10 @@ public class ExamDialog extends DockingGroupDialog
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
 	JTextArea textArea = new JTextArea();
+	ArrayList<Question> qs = new ArrayList<>();
+	int ndx=0;
 	Exam exam;
+	boolean fixMistakes;
 	public ExamDialog()
 	{
 		super(null, MODELESS, DISPOSE_ALL_FRAMES );
@@ -50,33 +54,27 @@ public class ExamDialog extends DockingGroupDialog
 		);
 		currentPnl.addPropertyChangeListener(ChoicePanel.class.getCanonicalName(),l->
 		{
+			Question q = currentPnl.getQuestion();
+			if(q.getState().equals(Question.State.wrong))
+					qs.add(q);
 			update();
 		});
 	}
-	public void set(Exam newExam)
+	public void set(Exam newExam,boolean fix)
 	{	
-		if(newExam.isEmpty()) return;
-		exam = newExam;
+		ndx = 0;
+		fixMistakes = fix;
+		qs.addAll(exam = newExam);
 		List<View> rmvList = views().entrySet().stream().filter(v->v.getValue().viewId.toLowerCase().contains("image")).map(e->e.getValue()).collect(Collectors.toList());
 		rmvList.stream().forEach(v->closeView(v));
-		IntStream.range(0, exam.getImages().size()).mapToObj(i->new View("image_"+(i+1), new JScrollPane(new JLabel(new ImageIcon(exam.getImages().get(i).getScaledInstance(400, 300, BufferedImage.SCALE_SMOOTH)))), "image_"+(i+1))).forEach(v->addView(v));
+		IntStream.range(0, newExam.getImages().size()).mapToObj(i->new View("image_"+(i+1), new JScrollPane(new JLabel(new ImageIcon(newExam.getImages().get(i).getScaledInstance(400, 300, BufferedImage.SCALE_SMOOTH)))), "image_"+(i+1))).forEach(v->addView(v));
 		update();
 	}
 	public void update()
 	{
-		textArea.setText(exam.getStats());
-		if(exam.hasNext())
-		{
-			previousPnl.setQuestion(currentPnl.getQuestion());
-			currentPnl.setQuestion(exam.next());
-			return;
-		}
-		if(!currentPnl.getQuestion().equals(Question.empty))
-		{
-			Question qstn = currentPnl.getQuestion();
-			previousPnl.setQuestion(qstn);
-			currentPnl.setQuestion(Question.empty);
-		}
+		textArea.setText(exam.toString());
+		previousPnl.setQuestion(currentPnl.getQuestion());
+		currentPnl.setQuestion(qs.isEmpty()?Question.empty:qs.remove(0));
 	}
 	public void setVisible(boolean visible)
 	{
@@ -89,7 +87,7 @@ public class ExamDialog extends DockingGroupDialog
 		if(JOptionPane.OK_OPTION != JOptionPane.showConfirmDialog(null, startPanel,"select below",JOptionPane.OK_CANCEL_OPTION))
 			return;
 		ExamDialog dialog = new ExamDialog();
-		dialog.set(startPanel.getExam());
+		dialog.set(startPanel.getExam(),startPanel.fixMistakes.isSelected());
 		dialog.setVisible(true);
 	}
 }
