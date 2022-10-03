@@ -22,6 +22,7 @@ import javax.swing.SpinnerNumberModel;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.Utility;
+import net.joshuahughes.fccamateurradio.examination.Utility.Ordering;
 import net.joshuahughes.fccamateurradio.examination.exam.Exam;
 import net.joshuahughes.fccamateurradio.examination.exam.ExamDocx;
 
@@ -48,6 +49,13 @@ public class StartPanel extends JPanel
 		{
 			Utility.Class cls =Arrays.asList(Utility.Class.values()).stream().filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
 			JRadioButton b = new JRadioButton(cls.name());
+			b.addActionListener(l->
+			{
+				min.setValue(0);
+				max.setValue(cls.getPoolCount());
+				cnt.setValue(cls.getQuestionCount());
+				orderMap.entrySet().stream().filter(e->e.getValue().equals(Ordering.random)).findAny().get().getKey().setSelected(true);
+			});
 			fileGrp.add(b);
 			fileMap.put(b, f);
 		});
@@ -77,8 +85,7 @@ public class StartPanel extends JPanel
 			min.setValue(0);
 			max.setValue(Utility.Class.valueOf(btn.getText()).getPoolCount());
 		});
-		fileMap.keySet().stream().filter(r->r.getText().toLowerCase().contains("general")).findAny().get().setSelected(true);
-		orderMap.keySet().stream().filter(r->r.getText().toLowerCase().contains("random")).findAny().get().setSelected(true);
+		fileMap.keySet().stream().filter(r->r.getText().toLowerCase().contains(Utility.Class.technician.name())).findAny().get().doClick();
 		
 		setLayout(new GridBagLayout());
 

@@ -76,6 +76,7 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 			}
 			prefix =
 					"---------------------------\n" +
+					f.getName()+"\n" +
 					"---------------------------\n" +
 					Utility.answerStats(qList);
 			List<Question> fList = qList.stream().filter(q->filter.test(q)).collect(Collectors.toList());

@@ -35,9 +35,9 @@ public class ExamDialog extends DockingGroupDialog
 	ChoicePanel  currentPnl = new ChoicePanel();
 	JTextArea textArea = new JTextArea();
 	ArrayList<Question> qs = new ArrayList<>();
+	boolean fixMistakes = true;
 	int ndx=0;
 	Exam exam;
-	boolean fixMistakes;
 	public ExamDialog()
 	{
 		super(null, MODELESS, DISPOSE_ALL_FRAMES );

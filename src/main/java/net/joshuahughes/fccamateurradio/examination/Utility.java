@@ -58,10 +58,11 @@ public class Utility
 			f.addValue((char)(q.getAnswer()+'A'));
 		
 		});
-		ps.println("------- singular --------");
+		ps.println("------- singular ---------");
 		ps.println(toString(singular));
 		ps.println("------- inclusive --------");
 		ps.println(toString(inclusive));
+		ps.println("--------------------------");
 		ps.close();
 		return new String(baos.toByteArray());
 	}
@@ -72,7 +73,6 @@ public class Utility
 		long right = exam.stream().filter(q->q.getState().equals(State.right)).count();
 		long wrong = exam.stream().filter(q->q.getState().equals(State.wrong)).count();
 		long remaining = exam.stream().filter(q->q.getState().equals(State.remaining)).count();
-		ps.println("*****************************************");
 		ps.println("*********** running totals *****************");
 		ps.println("remaining: "+ remaining);
 		ps.println("right: "+right);
