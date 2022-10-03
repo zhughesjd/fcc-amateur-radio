@@ -10,11 +10,9 @@ public class ExamList extends ArrayList<Question> implements Exam
 {
 	private static final long serialVersionUID = -5592756316715145573L;
 	private ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
-	public void set(ArrayList<Question> questionPool,ArrayList<BufferedImage> images)
+	public ExamList(List<Question> questionPool,ArrayList<BufferedImage> images)
 	{
-		clear();
 		addAll(questionPool);
-		imageList.clear();
 		imageList.addAll(images);
 	}
 	public List<BufferedImage> getImages()

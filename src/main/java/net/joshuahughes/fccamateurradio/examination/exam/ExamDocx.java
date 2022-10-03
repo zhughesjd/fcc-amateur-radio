@@ -26,12 +26,13 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 	private static final long serialVersionUID = -5592756316715145573L;
 	private File file = new File("");
 	private ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
-	int ndx = 0;
 	String prefix = "";
 	public void set(File f,Utility.Ordering ordering, int count, Predicate<Question> filter)
 	{
 		List<Question> qList = new ArrayList<>();
 		file = f;
+		String subelement = "invalidSubelement";
+		String group = "invalidGroup";
 		try
 		{
 			FileInputStream fis = new FileInputStream(file);
@@ -59,6 +60,10 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 					clear();
 					continue;
 				}
+				if(strings[ndx].toLowerCase().contains("subelement"))
+					subelement = strings[ndx];
+				if(validGroup(strings[ndx]))
+					group = strings[ndx];
 				String previous = strings[ndx];
 				String test = strings[ndx].replaceAll("\\s+","");
 				if(test.length()<8) continue;
@@ -67,7 +72,7 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 				{
 					int answer = test.split("\\(")[1].charAt(0)-'A';
 					String questionString = strings[++ndx];
-					Question question = new Question(previous,questionString, answer, qstnNdx.getAndIncrement());
+					Question question = new Question(subelement,group,previous,questionString, answer, qstnNdx.getAndIncrement());
 					AtomicInteger n = new AtomicInteger(ndx++);
 					IntStream.range(0, 4).mapToObj(i->strings[n.incrementAndGet()]).forEach(s->question.add(s));
 					qList.add(question);
@@ -102,5 +107,14 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 	public String toString()
 	{
 		return prefix+Utility.runningStats(this);
+	}
+	private boolean validGroup(String string)
+	{
+		if(string.length()<4) return false;
+		if(!Character.isAlphabetic(string.charAt(0))) return false;
+		if(!Character.isDigit(string.charAt(1))) return false;
+		if(!Character.isAlphabetic(string.charAt(2))) return false;
+		if(!Character.isWhitespace(string.charAt(3))) return false;
+		return true;
 	}
 }

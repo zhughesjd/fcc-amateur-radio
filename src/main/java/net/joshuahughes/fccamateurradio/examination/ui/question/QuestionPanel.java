@@ -22,6 +22,8 @@ public class QuestionPanel extends JPanel
 	Color rightBG = Color.green;
 	Color wrongBG = Color.red;
 	JLabel prev = new JLabel();
+	JLabel subelementLbl = new JLabel();
+	JLabel groupLbl = new JLabel();
 	JLabel questionLbl = new JLabel();
 	ButtonGroup chcGrp = new ButtonGroup();
 	ArrayList<JRadioButton> chcs = new ArrayList<>(IntStream.range(0, 4).mapToObj(i->new JRadioButton()).collect(Collectors.toList()));
@@ -35,6 +37,12 @@ public class QuestionPanel extends JPanel
 		gbc.anchor = GridBagConstraints.LINE_START;
 		add(prev,gbc);
 		
+		gbc.gridy++;
+		add(subelementLbl,gbc);
+
+		gbc.gridy++;
+		add(groupLbl,gbc);
+
 		gbc.gridy++;
 		add(questionLbl,gbc);
 
@@ -58,6 +66,8 @@ public class QuestionPanel extends JPanel
 	}
 	public void updateComponents()
 	{
+		subelementLbl.setText(question.getSubelement());
+		groupLbl.setText(question.getGroup());
 		questionLbl.setText(question.toString());
 		chcGrp.clearSelection();
 		chcs.stream().forEach(c->c.setBackground(defltBG));
