@@ -91,5 +91,4 @@ public class Utility
 		StreamSupport.stream(iterable.spliterator(), false).forEach(e->ps.println(e.getKey()+" -> "+f.getPct(e.getKey())));
 		return new String(baos.toByteArray());
 	}
-
 }

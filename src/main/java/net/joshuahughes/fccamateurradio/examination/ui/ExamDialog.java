@@ -15,7 +15,6 @@ import java.util.stream.IntStream;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -80,14 +79,5 @@ public class ExamDialog extends DockingGroupDialog
 	{
 		super.setVisible(visible);
 		currentPnl.requestFocus();
-	}
-	public static void main(String[] args) throws Exception
-	{
-		StartPanel startPanel = new StartPanel();
-		if(JOptionPane.OK_OPTION != JOptionPane.showConfirmDialog(null, startPanel,"select below",JOptionPane.OK_CANCEL_OPTION))
-			return;
-		ExamDialog dialog = new ExamDialog();
-		dialog.set(startPanel.getExam(),startPanel.fixMistakes.isSelected());
-		dialog.setVisible(true);
 	}
 }

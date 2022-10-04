@@ -5,12 +5,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
@@ -21,13 +20,13 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.Utility;
 
-public class ExamDocx extends ArrayList<Question> implements Exam
+public class DocxExam extends ArrayList<Question> implements Exam
 {
 	private static final long serialVersionUID = -5592756316715145573L;
 	private File file = new File("");
 	private ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
 	String prefix = "";
-	public void set(File f,Utility.Ordering ordering, int count, Predicate<Question> filter)
+	public DocxExam(File f,Predicate<Question> predicate)
 	{
 		List<Question> qList = new ArrayList<>();
 		file = f;
@@ -84,16 +83,7 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 					f.getName()+"\n" +
 					"---------------------------\n" +
 					Utility.answerStats(qList);
-			List<Question> fList = qList.stream().filter(q->filter.test(q)).collect(Collectors.toList());
-			if(ordering.equals(Utility.Ordering.reverse))
-				Collections.reverse(fList);
-			if(ordering.equals(Utility.Ordering.random))
-			{
-				ArrayList<Question> temp = new ArrayList<>(fList);
-				fList.clear();
-				IntStream.range(0, temp.size()).forEach(i->fList.add(temp.remove(Utility.rnd.nextInt(temp.size()))));
-			}
-			IntStream.range(0, Math.min(count, fList.size())).forEach(i->add(fList.get(i)));
+			qList.stream().filter(q->predicate.test(q)).forEach(q->add(q));
 		}
 		catch(Exception e)
 		{
@@ -106,7 +96,11 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 	}
 	public String toString()
 	{
-		return prefix+Utility.runningStats(this);
+		return 
+				"-----------------\n"+
+				file.getName()+"\n"+
+				"-----------------\n"+
+				Utility.answerStats(this);
 	}
 	private boolean validGroup(String string)
 	{
@@ -116,5 +110,9 @@ public class ExamDocx extends ArrayList<Question> implements Exam
 		if(!Character.isAlphabetic(string.charAt(2))) return false;
 		if(!Character.isWhitespace(string.charAt(3))) return false;
 		return true;
+	}
+	public Utility.Class getUtilityClass()
+	{
+		return Stream.of(Utility.Class.values()).filter(c->file.getName().toLowerCase().contains(c.name().toLowerCase())).findAny().get();
 	}
 }
