@@ -17,7 +17,6 @@ public class FCCExam extends PoolExam
 	{
 		super(exam);
 		String string = exam.toString();
-		System.out.println(string);
 		Class cls = Stream.of(Utility.Class.values()).filter(c->string.toLowerCase().contains(c.name())).findAny().get();
 		List<Question> fccQuestions = IntStream.
 				range(0, cls.getQuestionCount()).

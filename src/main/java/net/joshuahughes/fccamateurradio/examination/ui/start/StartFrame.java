@@ -40,6 +40,8 @@ public class StartFrame extends JFrame
 	public StartFrame(ExamDialog dlg) 
 	{
 		dialog = dlg;
+		subelementBox.setPrototypeDisplayValue("*********************************");
+		groupBox.setPrototypeDisplayValue("*********************************");
 		setContentPane(new JPanel(new GridBagLayout()));
 		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
 		Stream.of(file.listFiles()).forEach(f->
