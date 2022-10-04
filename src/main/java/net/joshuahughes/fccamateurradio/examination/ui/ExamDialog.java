@@ -9,12 +9,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -33,9 +35,8 @@ public class ExamDialog extends DockingGroupDialog
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
 	JTextArea textArea = new JTextArea();
-	ArrayList<Question> qs = new ArrayList<>();
-	boolean fixMistakes = true;
-	int ndx=0;
+	ArrayList<Question> pending = new ArrayList<>();
+	Boolean appendWrong = null;
 	Exam exam;
 	public ExamDialog()
 	{
@@ -55,18 +56,18 @@ public class ExamDialog extends DockingGroupDialog
 		{
 			Question q = currentPnl.getQuestion();
 			if(q.getState().equals(Question.State.wrong))
-					qs.add(q);
+					pending.add(q);
 			update();
 		});
 	}
-	public void set(Exam newExam,boolean fix)
+	public void set(Exam newExam)
 	{	
-		ndx = 0;
-		fixMistakes = fix;
 		currentPnl.setQuestion(Question.empty);
 		previousPnl.setQuestion(Question.empty);
-		qs.clear();
-		qs.addAll(exam = newExam);
+		pending.clear();
+		pending.addAll(exam = newExam);
+		appendWrong = null;
+		exam.stream().forEach(q->q.setSelection(-1));
 		List<View> rmvList = views().entrySet().stream().filter(v->v.getValue().viewId.toLowerCase().contains("image")).map(e->e.getValue()).collect(Collectors.toList());
 		rmvList.stream().forEach(v->closeView(v));
 		IntStream.range(0, newExam.getImages().size()).mapToObj(i->new View("image_"+(i+1), new JScrollPane(new JLabel(new ImageIcon(newExam.getImages().get(i).getScaledInstance(400, 300, BufferedImage.SCALE_SMOOTH)))), "image_"+(i+1))).forEach(v->addView(v));
@@ -75,8 +76,33 @@ public class ExamDialog extends DockingGroupDialog
 	public void update()
 	{
 		textArea.setText(exam.toString());
-		previousPnl.setQuestion(currentPnl.getQuestion());
-		currentPnl.setQuestion(qs.isEmpty()?Question.empty:qs.remove(0));
+		Question previous = currentPnl.getQuestion();
+		if(!previous.equals(Question.empty)) previousPnl.setQuestion(previous);
+		if(pending.isEmpty())
+		{
+			currentPnl.setQuestion(Question.empty);
+			return;
+		}
+		Optional<Question> op = pending.stream().filter(q->q.getState().equals(Question.State.pending)).findFirst();
+		if(op.isPresent())
+		{
+			currentPnl.setQuestion(pending.remove(0));
+			return;
+		}
+		if(appendWrong == null)
+		{
+			appendWrong = JOptionPane.showConfirmDialog(currentPnl, "fix mistakes?", "fix mistakes?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+		}
+		if(!appendWrong)
+		{
+			pending.clear();
+			return;
+		}
+		Optional<Question> wrongOp = pending.stream().filter(q->q.getState().equals(Question.State.wrong)).findFirst();
+		if(wrongOp.isPresent())
+		{
+			currentPnl.setQuestion(pending.remove(0));
+		}
 	}
 	public void setVisible(boolean visible)
 	{

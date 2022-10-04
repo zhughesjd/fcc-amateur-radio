@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 public class Question extends ArrayList<String>
 {
-	public enum State{right,wrong,remaining}
+	public enum State{right,wrong,pending}
 	public static final String propertyName = Question.class.getCanonicalName();
 	public static final Question empty = new Question("subelement","group","previous","empty", -1,-1);
 	static {IntStream.range(0, 4).forEach(i->empty.add("invalid_"+i));}
@@ -50,7 +50,7 @@ public class Question extends ArrayList<String>
 	public State getState()
 	{
 		if(selection == answer) return State.right;
-		if(selection == -1) return State.remaining;
+		if(selection == -1) return State.pending;
 		return State.wrong;
 	}
 	public void addPropertyListener(PropertyChangeListener listener)

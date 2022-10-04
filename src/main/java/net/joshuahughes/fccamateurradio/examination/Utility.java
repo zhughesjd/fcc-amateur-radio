@@ -72,7 +72,7 @@ public class Utility
 		PrintStream ps = new PrintStream(baos);
 		long right = exam.stream().filter(q->q.getState().equals(State.right)).count();
 		long wrong = exam.stream().filter(q->q.getState().equals(State.wrong)).count();
-		long remaining = exam.stream().filter(q->q.getState().equals(State.remaining)).count();
+		long remaining = exam.stream().filter(q->q.getState().equals(State.pending)).count();
 		ps.println("*********** running totals *****************");
 		ps.println("remaining: "+ remaining);
 		ps.println("right: "+right);

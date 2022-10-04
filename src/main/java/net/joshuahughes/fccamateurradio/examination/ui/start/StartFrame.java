@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,7 +31,6 @@ public class StartFrame extends JFrame
 
 	JComboBox<Utility.Class> classBox = new JComboBox<>(Utility.Class.values());
 	LinkedHashMap<Utility.Class, DocxExam> exampMap = new LinkedHashMap<>();
-	JCheckBox fixMistakes = new JCheckBox("",true);
 	JComboBox<String> subelementBox = new JComboBox<String>();
 	JComboBox<String> groupBox = new JComboBox<String>();
 	JButton fccBtn = new JButton("FCC");
@@ -71,13 +69,6 @@ public class StartFrame extends JFrame
 		
 		gbc.gridx=0;
 		gbc.gridy++;
-		p.add(new JLabel("fix mistakes: "),gbc);
-
-		gbc.gridx++;
-		p.add(fixMistakes,gbc);
-
-		gbc.gridx=0;
-		gbc.gridy++;
 		p.add(new JLabel("subelement: "),gbc);
 
 		gbc.gridx++;
@@ -107,20 +98,20 @@ public class StartFrame extends JFrame
 		groupBox.addActionListener(l->
 		{
 			if(groupBox.getSelectedItem()!=null)
-				dialog.set(new SubelementExam(getExam(), groupBox.getSelectedItem().toString()),fixMistakes.isSelected());
+				dialog.set(new SubelementExam(getExam(), groupBox.getSelectedItem().toString()));
 		});
 		subelementBox.addActionListener(l->
 		{
 			if(subelementBox.getSelectedItem()!=null)
-				dialog.set(new SubelementExam(getExam(), subelementBox.getSelectedItem().toString()),fixMistakes.isSelected());
+				dialog.set(new SubelementExam(getExam(), subelementBox.getSelectedItem().toString()));
 		});
 		fccBtn.addActionListener(l->
 		{
-			dialog.set(new FCCExam(getExam()),fixMistakes.isSelected());
+			dialog.set(new FCCExam(getExam()));
 		});
 		containsFld.addActionListener(l->
 		{
-			dialog.set(new Contains(getExam(), containsFld.getText()),fixMistakes.isSelected());
+			dialog.set(new Contains(getExam(), containsFld.getText()));
 		});
 		pack();
 	}
