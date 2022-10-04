@@ -63,6 +63,9 @@ public class ExamDialog extends DockingGroupDialog
 	{	
 		ndx = 0;
 		fixMistakes = fix;
+		currentPnl.setQuestion(Question.empty);
+		previousPnl.setQuestion(Question.empty);
+		qs.clear();
 		qs.addAll(exam = newExam);
 		List<View> rmvList = views().entrySet().stream().filter(v->v.getValue().viewId.toLowerCase().contains("image")).map(e->e.getValue()).collect(Collectors.toList());
 		rmvList.stream().forEach(v->closeView(v));

@@ -59,7 +59,7 @@ public class DocxExam extends ArrayList<Question> implements Exam
 					clear();
 					continue;
 				}
-				if(strings[ndx].toLowerCase().contains("subelement"))
+				if(strings[ndx].toLowerCase().startsWith("subelement"))
 					subelement = strings[ndx];
 				if(validGroup(strings[ndx]))
 					group = strings[ndx];
@@ -71,11 +71,14 @@ public class DocxExam extends ArrayList<Question> implements Exam
 				{
 					int answer = test.split("\\(")[1].charAt(0)-'A';
 					String questionString = strings[++ndx];
-					Question question = new Question(subelement,group,previous,questionString, answer, qstnNdx.getAndIncrement());
-					AtomicInteger n = new AtomicInteger(ndx++);
-					IntStream.range(0, 4).mapToObj(i->strings[n.incrementAndGet()]).forEach(s->question.add(s));
-					qList.add(question);
-					ndx=n.get();
+					if(!subelement.equals("invalidSubelement"))
+					{
+						Question question = new Question(subelement,group,previous,questionString, answer, qstnNdx.getAndIncrement());
+						AtomicInteger n = new AtomicInteger(ndx++);
+						IntStream.range(0, 4).mapToObj(i->strings[n.incrementAndGet()]).forEach(s->question.add(s));
+						qList.add(question);
+						ndx=n.get();
+					}
 				}
 			}
 			prefix =

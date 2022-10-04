@@ -11,7 +11,7 @@ public class Question extends ArrayList<String>
 	public enum State{right,wrong,remaining}
 	public static final String propertyName = Question.class.getCanonicalName();
 	public static final Question empty = new Question("subelement","group","previous","empty", -1,-1);
-	static {IntStream.range(0, 4).forEach(i->empty.add(""));}
+	static {IntStream.range(0, 4).forEach(i->empty.add("invalid_"+i));}
 	private static final long serialVersionUID = -6805931509053989701L;
 	JPanel handler = new JPanel();
 	int selection = -1;
