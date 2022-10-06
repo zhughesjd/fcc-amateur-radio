@@ -7,9 +7,10 @@ public class Contains extends RemoveIf
 	public Contains(String string) {super(string);}
 
 	@Override
-	public boolean removeIf(Question q, String s)
+	public boolean removeIf(Question q, String string)
 	{
-		if(q.getQuestion().toLowerCase().contains(s)) return false;
+		String s = string.toLowerCase();
+		if(q.getQuestion().toLowerCase().contains(s)) {return false;}
 		if(q.stream().filter(c->c.toLowerCase().contains(s)).findAny().isPresent()) return false;
 		return true;
 	}

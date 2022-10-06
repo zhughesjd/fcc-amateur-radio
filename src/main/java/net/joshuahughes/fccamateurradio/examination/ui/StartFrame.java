@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.examination.ui.start;
+package net.joshuahughes.fccamateurradio.examination.ui;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -23,7 +23,6 @@ import net.joshuahughes.fccamateurradio.examination.exam.function.Contains;
 import net.joshuahughes.fccamateurradio.examination.exam.function.FCC;
 import net.joshuahughes.fccamateurradio.examination.exam.function.Group;
 import net.joshuahughes.fccamateurradio.examination.exam.function.Subelement;
-import net.joshuahughes.fccamateurradio.examination.ui.ExamDialog;
 
 public class StartFrame extends JFrame
 {
@@ -32,7 +31,7 @@ public class StartFrame extends JFrame
 	ButtonGroup orderGrp = new ButtonGroup();
 
 	JComboBox<Utility.Class> classBox = new JComboBox<>(Utility.Class.values());
-	LinkedHashMap<Utility.Class, DocxPool> exampMap = new LinkedHashMap<>();
+	LinkedHashMap<Utility.Class, DocxPool> examMap = new LinkedHashMap<>();
 	JComboBox<String> subelementBox = new JComboBox<String>();
 	JComboBox<String> groupBox = new JComboBox<String>();
 	JButton fccBtn = new JButton("FCC");
@@ -48,9 +47,9 @@ public class StartFrame extends JFrame
 		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
 		Stream.of(file.listFiles()).forEach(f->
 		{
-			DocxPool exam = new DocxPool(f,q->true);
 			Utility.Class cls = Stream.of(Utility.Class.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
-			exampMap.put(cls, exam);
+			DocxPool pool = new DocxPool(f);
+			examMap.put(cls, pool);
 		});
 		classBox.addActionListener(l->
 		{
@@ -122,7 +121,7 @@ public class StartFrame extends JFrame
 	
 	public DocxPool getPool()
 	{
-		return exampMap.get((Utility.Class) classBox.getSelectedItem());
+		return examMap.get((Utility.Class) classBox.getSelectedItem());
 		
 	}
 	public static void main(String[] args)

@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -25,10 +24,11 @@ public class DocxPool extends PoolImpl
 	private static final long serialVersionUID = -5592756316715145573L;
 	private File file = new File("");
 	String prefix = "";
-	public DocxPool(File f,Predicate<Question> predicate)
+	Utility.Class cls;
+	public DocxPool(File f)
 	{
-		List<Question> qList = new ArrayList<>();
 		file = f;
+		cls = Stream.of(Utility.Class.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();		List<Question> qList = new ArrayList<>();
 		String subelement = "invalidSubelement";
 		String group = "invalidGroup";
 		try
@@ -85,7 +85,7 @@ public class DocxPool extends PoolImpl
 					f.getName()+"\n" +
 					"---------------------------\n" +
 					Utility.answerStats(qList);
-			qList.stream().filter(q->predicate.test(q)).forEach(q->add(q));
+			addAll(qList);
 		}
 		catch(Exception e)
 		{
@@ -115,6 +115,6 @@ public class DocxPool extends PoolImpl
 	}
 	public Utility.Class getUtilityClass()
 	{
-		return Stream.of(Utility.Class.values()).filter(c->file.getName().toLowerCase().contains(c.name().toLowerCase())).findAny().get();
+		return cls;
 	}
 }
