@@ -18,10 +18,11 @@ import javax.swing.JTextField;
 
 import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.Utility.Class;
-import net.joshuahughes.fccamateurradio.examination.exam.Contains;
 import net.joshuahughes.fccamateurradio.examination.exam.DocxPool;
-import net.joshuahughes.fccamateurradio.examination.exam.SubelementExam;
+import net.joshuahughes.fccamateurradio.examination.exam.function.Contains;
 import net.joshuahughes.fccamateurradio.examination.exam.function.FCC;
+import net.joshuahughes.fccamateurradio.examination.exam.function.Group;
+import net.joshuahughes.fccamateurradio.examination.exam.function.Subelement;
 import net.joshuahughes.fccamateurradio.examination.ui.ExamDialog;
 
 public class StartFrame extends JFrame
@@ -101,12 +102,12 @@ public class StartFrame extends JFrame
 		groupBox.addActionListener(l->
 		{
 			if(groupBox.getSelectedItem()!=null)
-				dialog.set(new SubelementExam(getPool(), groupBox.getSelectedItem().toString()));
+				dialog.set(new Group(groupBox.getSelectedItem().toString()).apply(getPool()));
 		});
 		subelementBox.addActionListener(l->
 		{
 			if(subelementBox.getSelectedItem()!=null)
-				dialog.set(new SubelementExam(getPool(), subelementBox.getSelectedItem().toString()));
+				dialog.set(new Subelement(subelementBox.getSelectedItem().toString()).apply(getPool()));
 		});
 		fccBtn.addActionListener(l->
 		{
@@ -114,7 +115,7 @@ public class StartFrame extends JFrame
 		});
 		containsFld.addActionListener(l->
 		{
-			dialog.set(new Contains(getPool(), containsFld.getText()));
+			dialog.set(new Contains(containsFld.getText()).apply(getPool()));
 		});
 		pack();
 	}

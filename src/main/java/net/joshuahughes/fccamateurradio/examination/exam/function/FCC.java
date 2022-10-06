@@ -22,11 +22,8 @@ public class FCC implements Creator
 				range(0, cls.getQuestionCount()).
 				mapToObj(i->exam.remove(Utility.rnd.nextInt(exam.size()))).
 				collect(Collectors.toList());
-		System.out.println(exam.size());
 		exam.clear();
-		System.out.println(exam.size());
 		exam.addAll(fccQuestions);
-		System.out.println(exam.size());
 		return exam;
 	}
 
