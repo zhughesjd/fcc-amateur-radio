@@ -9,14 +9,14 @@ import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.Utility.Class;
 
-public class FCCExam extends PoolExam
+public class FCCExam extends Exam
 {
 	private static final long serialVersionUID = -2085521442066356828L;
 
-	public FCCExam(Exam exam)
+	public FCCExam(Pool pool)
 	{
-		super(exam);
-		String string = exam.toString();
+		super(pool);
+		String string = pool.toString();
 		Class cls = Stream.of(Utility.Class.values()).filter(c->string.toLowerCase().contains(c.name())).findAny().get();
 		List<Question> fccQuestions = IntStream.
 				range(0, cls.getQuestionCount()).

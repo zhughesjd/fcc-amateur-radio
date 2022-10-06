@@ -25,7 +25,7 @@ import com.metsci.glimpse.docking.examples.ModalDialogDockingExample;
 import com.metsci.glimpse.docking.group.dialog.DockingGroupDialog;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
-import net.joshuahughes.fccamateurradio.examination.exam.Exam;
+import net.joshuahughes.fccamateurradio.examination.exam.Pool;
 import net.joshuahughes.fccamateurradio.examination.ui.question.ChoicePanel;
 import net.joshuahughes.fccamateurradio.examination.ui.question.DisplayPanel;
 
@@ -37,7 +37,7 @@ public class ExamDialog extends DockingGroupDialog
 	JTextArea textArea = new JTextArea();
 	ArrayList<Question> pending = new ArrayList<>();
 	Boolean appendWrong = null;
-	Exam exam;
+	Pool exam;
 	public ExamDialog()
 	{
 		super(null, MODELESS, DISPOSE_ALL_FRAMES );
@@ -60,7 +60,7 @@ public class ExamDialog extends DockingGroupDialog
 			update();
 		});
 	}
-	public void set(Exam newExam)
+	public void set(Pool newExam)
 	{	
 		currentPnl.setQuestion(Question.empty);
 		previousPnl.setQuestion(Question.empty);

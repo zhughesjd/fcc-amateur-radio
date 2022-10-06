@@ -2,7 +2,7 @@ package net.joshuahughes.fccamateurradio.examination.exam;
 
 import java.io.File;
 
-public class IndexedExam extends DocxExam
+public class IndexedExam extends DocxPool
 {
 	private static final long serialVersionUID = -2085521442066356828L;
 

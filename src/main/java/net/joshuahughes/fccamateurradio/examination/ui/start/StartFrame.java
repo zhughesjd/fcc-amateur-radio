@@ -17,10 +17,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import net.joshuahughes.fccamateurradio.examination.Utility;
+import net.joshuahughes.fccamateurradio.examination.Utility.Class;
 import net.joshuahughes.fccamateurradio.examination.exam.Contains;
-import net.joshuahughes.fccamateurradio.examination.exam.DocxExam;
-import net.joshuahughes.fccamateurradio.examination.exam.FCCExam;
+import net.joshuahughes.fccamateurradio.examination.exam.DocxPool;
 import net.joshuahughes.fccamateurradio.examination.exam.SubelementExam;
+import net.joshuahughes.fccamateurradio.examination.exam.function.FCC;
 import net.joshuahughes.fccamateurradio.examination.ui.ExamDialog;
 
 public class StartFrame extends JFrame
@@ -30,7 +31,7 @@ public class StartFrame extends JFrame
 	ButtonGroup orderGrp = new ButtonGroup();
 
 	JComboBox<Utility.Class> classBox = new JComboBox<>(Utility.Class.values());
-	LinkedHashMap<Utility.Class, DocxExam> exampMap = new LinkedHashMap<>();
+	LinkedHashMap<Utility.Class, DocxPool> exampMap = new LinkedHashMap<>();
 	JComboBox<String> subelementBox = new JComboBox<String>();
 	JComboBox<String> groupBox = new JComboBox<String>();
 	JButton fccBtn = new JButton("FCC");
@@ -46,16 +47,16 @@ public class StartFrame extends JFrame
 		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
 		Stream.of(file.listFiles()).forEach(f->
 		{
-			DocxExam exam = new DocxExam(f,q->true);
+			DocxPool exam = new DocxPool(f,q->true);
 			Utility.Class cls = Stream.of(Utility.Class.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
 			exampMap.put(cls, exam);
 		});
 		classBox.addActionListener(l->
 		{
 			subelementBox.removeAllItems();
-			getExam().stream().map(q->q.getSubelement()).distinct().forEach(s->subelementBox.addItem(s));
+			getPool().stream().map(q->q.getSubelement()).distinct().forEach(s->subelementBox.addItem(s));
 			groupBox.removeAllItems();
-			getExam().stream().map(q->q.getGroup()).distinct().forEach(s->groupBox.addItem(s));
+			getPool().stream().map(q->q.getGroup()).distinct().forEach(s->groupBox.addItem(s));
 			pack();
 		});
 		classBox.setSelectedItem(Utility.Class.general);
@@ -100,25 +101,25 @@ public class StartFrame extends JFrame
 		groupBox.addActionListener(l->
 		{
 			if(groupBox.getSelectedItem()!=null)
-				dialog.set(new SubelementExam(getExam(), groupBox.getSelectedItem().toString()));
+				dialog.set(new SubelementExam(getPool(), groupBox.getSelectedItem().toString()));
 		});
 		subelementBox.addActionListener(l->
 		{
 			if(subelementBox.getSelectedItem()!=null)
-				dialog.set(new SubelementExam(getExam(), subelementBox.getSelectedItem().toString()));
+				dialog.set(new SubelementExam(getPool(), subelementBox.getSelectedItem().toString()));
 		});
 		fccBtn.addActionListener(l->
 		{
-			dialog.set(new FCCExam(getExam()));
+			dialog.set(new FCC((Class) this.classBox.getSelectedItem()).apply(getPool()));
 		});
 		containsFld.addActionListener(l->
 		{
-			dialog.set(new Contains(getExam(), containsFld.getText()));
+			dialog.set(new Contains(getPool(), containsFld.getText()));
 		});
 		pack();
 	}
 	
-	public DocxExam getExam()
+	public DocxPool getPool()
 	{
 		return exampMap.get((Utility.Class) classBox.getSelectedItem());
 		

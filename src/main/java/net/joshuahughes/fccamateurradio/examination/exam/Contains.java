@@ -1,9 +1,9 @@
 package net.joshuahughes.fccamateurradio.examination.exam;
 
-public class Contains extends PoolExam
+public class Contains extends Exam
 {
 	private static final long serialVersionUID = -5592756316715145573L;
-	public Contains(Exam exam,String contains) {
+	public Contains(Pool exam,String contains) {
 		super(exam);
 		removeIf(q->
 		{

@@ -10,7 +10,7 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.math3.stat.Frequency;
 
 import net.joshuahughes.fccamateurradio.examination.Question.State;
-import net.joshuahughes.fccamateurradio.examination.exam.Exam;
+import net.joshuahughes.fccamateurradio.examination.exam.Pool;
 
 public class Utility
 {
@@ -66,7 +66,7 @@ public class Utility
 		ps.close();
 		return new String(baos.toByteArray());
 	}
-	public static String runningStats(Exam exam)
+	public static String runningStats(Pool exam)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 		PrintStream ps = new PrintStream(baos);

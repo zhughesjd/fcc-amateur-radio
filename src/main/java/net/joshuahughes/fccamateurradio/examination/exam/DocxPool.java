@@ -20,13 +20,12 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.Utility;
 
-public class DocxExam extends ArrayList<Question> implements Exam
+public class DocxPool extends PoolImpl
 {
 	private static final long serialVersionUID = -5592756316715145573L;
 	private File file = new File("");
-	private ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
 	String prefix = "";
-	public DocxExam(File f,Predicate<Question> predicate)
+	public DocxPool(File f,Predicate<Question> predicate)
 	{
 		List<Question> qList = new ArrayList<>();
 		file = f;
