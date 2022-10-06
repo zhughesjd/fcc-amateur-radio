@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.examination.exam.function;
+package net.joshuahughes.fccamateurradio.examination.pool.function;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
 

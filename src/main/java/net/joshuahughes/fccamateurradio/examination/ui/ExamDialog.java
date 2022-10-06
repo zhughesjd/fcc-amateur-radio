@@ -25,7 +25,7 @@ import com.metsci.glimpse.docking.examples.ModalDialogDockingExample;
 import com.metsci.glimpse.docking.group.dialog.DockingGroupDialog;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
-import net.joshuahughes.fccamateurradio.examination.exam.Pool;
+import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 import net.joshuahughes.fccamateurradio.examination.ui.question.ChoicePanel;
 import net.joshuahughes.fccamateurradio.examination.ui.question.DisplayPanel;
 

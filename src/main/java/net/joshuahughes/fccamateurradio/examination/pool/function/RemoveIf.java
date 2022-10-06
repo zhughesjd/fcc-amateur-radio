@@ -1,8 +1,8 @@
-package net.joshuahughes.fccamateurradio.examination.exam.function;
+package net.joshuahughes.fccamateurradio.examination.pool.function;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
-import net.joshuahughes.fccamateurradio.examination.exam.Exam;
-import net.joshuahughes.fccamateurradio.examination.exam.Pool;
+import net.joshuahughes.fccamateurradio.examination.pool.Exam;
+import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 
 public abstract class RemoveIf implements Creator
 {

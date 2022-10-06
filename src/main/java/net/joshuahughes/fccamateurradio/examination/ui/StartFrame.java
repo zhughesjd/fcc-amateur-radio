@@ -18,11 +18,11 @@ import javax.swing.JTextField;
 
 import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.Utility.Class;
-import net.joshuahughes.fccamateurradio.examination.exam.DocxPool;
-import net.joshuahughes.fccamateurradio.examination.exam.function.Contains;
-import net.joshuahughes.fccamateurradio.examination.exam.function.FCC;
-import net.joshuahughes.fccamateurradio.examination.exam.function.Group;
-import net.joshuahughes.fccamateurradio.examination.exam.function.Subelement;
+import net.joshuahughes.fccamateurradio.examination.pool.DocxPool;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Contains;
+import net.joshuahughes.fccamateurradio.examination.pool.function.FCC;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Group;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Subelement;
 
 public class StartFrame extends JFrame
 {

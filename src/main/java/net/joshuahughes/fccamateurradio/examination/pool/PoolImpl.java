@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.examination.exam;
+package net.joshuahughes.fccamateurradio.examination.pool;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package net.joshuahughes.fccamateurradio.examination.exam.function;
+package net.joshuahughes.fccamateurradio.examination.pool.function;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,8 +7,8 @@ import java.util.stream.IntStream;
 import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.Utility.Class;
-import net.joshuahughes.fccamateurradio.examination.exam.Exam;
-import net.joshuahughes.fccamateurradio.examination.exam.Pool;
+import net.joshuahughes.fccamateurradio.examination.pool.Exam;
+import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 
 public class FCC implements Creator
 {

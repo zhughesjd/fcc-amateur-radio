@@ -10,7 +10,7 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.math3.stat.Frequency;
 
 import net.joshuahughes.fccamateurradio.examination.Question.State;
-import net.joshuahughes.fccamateurradio.examination.exam.Pool;
+import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 
 public class Utility
 {
