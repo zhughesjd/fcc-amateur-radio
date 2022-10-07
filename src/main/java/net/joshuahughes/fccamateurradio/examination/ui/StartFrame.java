@@ -19,21 +19,18 @@ import javax.swing.JTextField;
 import net.joshuahughes.fccamateurradio.examination.LicenseClass;
 import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.pool.DocxPool;
+import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 import net.joshuahughes.fccamateurradio.examination.pool.function.Contains;
 import net.joshuahughes.fccamateurradio.examination.pool.function.FCC;
-import net.joshuahughes.fccamateurradio.examination.pool.function.Group;
-import net.joshuahughes.fccamateurradio.examination.pool.function.Subelement;
 
 public class StartFrame extends JFrame
 {
 	private static final long serialVersionUID = 2261331185832055649L;
 	LinkedHashMap<JRadioButton,Utility.Ordering> orderMap = new LinkedHashMap<>();
 	ButtonGroup orderGrp = new ButtonGroup();
-
+	SubelementGroupPanel sePnl = new SubelementGroupPanel();
 	JComboBox<LicenseClass> classBox = new JComboBox<>(LicenseClass.values());
 	LinkedHashMap<LicenseClass, DocxPool> examMap = new LinkedHashMap<>();
-	JComboBox<String> subelementBox = new JComboBox<String>();
-	JComboBox<String> groupBox = new JComboBox<String>();
 	JButton fccBtn = new JButton("FCC");
 	JTextField containsFld = new JTextField(15);
 	ExamDialog dialog;
@@ -41,8 +38,6 @@ public class StartFrame extends JFrame
 	public StartFrame(ExamDialog dlg) 
 	{
 		dialog = dlg;
-		subelementBox.setPrototypeDisplayValue("*********************************");
-		groupBox.setPrototypeDisplayValue("*********************************");
 		setContentPane(new JPanel(new GridBagLayout()));
 		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
 		Stream.of(file.listFiles()).forEach(f->
@@ -53,11 +48,7 @@ public class StartFrame extends JFrame
 		});
 		classBox.addActionListener(l->
 		{
-			subelementBox.removeAllItems();
-			getPool().stream().map(q->q.getSubelement()).distinct().forEach(s->subelementBox.addItem(s));
-			groupBox.removeAllItems();
-			getPool().stream().map(q->q.getGroup()).distinct().forEach(s->groupBox.addItem(s));
-			pack();
+			sePnl.setLicenseClass((LicenseClass) classBox.getSelectedItem());
 		});
 		classBox.setSelectedItem(LicenseClass.general);
 		Container p = getContentPane();
@@ -72,18 +63,10 @@ public class StartFrame extends JFrame
 		
 		gbc.gridx=0;
 		gbc.gridy++;
-		p.add(new JLabel("subelement: "),gbc);
+		gbc.gridwidth=2;
+		p.add(sePnl,gbc);
 
-		gbc.gridx++;
-		p.add(subelementBox,gbc);
-
-		gbc.gridx=0;
-		gbc.gridy++;
-		p.add(new JLabel("group: "),gbc);
-
-		gbc.gridx++;
-		p.add(groupBox,gbc);
-		
+		gbc.gridwidth=1;
 		gbc.gridx=0;
 		gbc.gridy++;
 		p.add(new JLabel("fcc: "),gbc);
@@ -98,16 +81,11 @@ public class StartFrame extends JFrame
 		gbc.gridx++;
 		p.add(containsFld,gbc);
 		
-		groupBox.addActionListener(l->
+		sePnl.addPropertyChangeListener(SubelementGroupPanel.class.getCanonicalName(), l->
 		{
-			if(groupBox.getSelectedItem()!=null)
-				dialog.set(new Group(groupBox.getSelectedItem().toString()).apply(getPool()));
+			dialog.set((Pool)l.getNewValue());
 		});
-		subelementBox.addActionListener(l->
-		{
-			if(subelementBox.getSelectedItem()!=null)
-				dialog.set(new Subelement(subelementBox.getSelectedItem().toString()).apply(getPool()));
-		});
+		
 		fccBtn.addActionListener(l->
 		{
 			dialog.set(new FCC((LicenseClass) this.classBox.getSelectedItem()).apply(getPool()));

@@ -6,6 +6,7 @@ public class Exam extends PoolImpl
 {
 	private static final long serialVersionUID = 7016846161780289405L;
 	private String prefix = "";
+	public Exam() {}
 	public Exam(Pool pool)
 	{
 		addAll(pool);

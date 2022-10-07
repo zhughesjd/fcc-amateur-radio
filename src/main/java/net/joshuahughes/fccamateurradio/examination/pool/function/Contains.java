@@ -4,8 +4,7 @@ import net.joshuahughes.fccamateurradio.examination.Question;
 
 public class Contains extends RemoveIf
 {
-	public Contains(String string) {super(string);}
-
+	public Contains(String... strings) {super(strings);}
 	@Override
 	public boolean removeIf(Question q, String string)
 	{
