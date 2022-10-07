@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
@@ -24,11 +23,10 @@ public class DocxPool extends PoolImpl
 	private static final long serialVersionUID = -5592756316715145573L;
 	private File file = new File("");
 	String prefix = "";
-	Utility.Class cls;
 	public DocxPool(File f)
 	{
 		file = f;
-		cls = Stream.of(Utility.Class.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();		List<Question> qList = new ArrayList<>();
+		List<Question> qList = new ArrayList<>();
 		String subelement = "invalidSubelement";
 		String group = "invalidGroup";
 		try
@@ -112,9 +110,5 @@ public class DocxPool extends PoolImpl
 		if(!Character.isAlphabetic(string.charAt(2))) return false;
 		if(!Character.isWhitespace(string.charAt(3))) return false;
 		return true;
-	}
-	public Utility.Class getUtilityClass()
-	{
-		return cls;
 	}
 }

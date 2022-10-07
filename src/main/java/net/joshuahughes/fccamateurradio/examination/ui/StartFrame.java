@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import net.joshuahughes.fccamateurradio.examination.LicenseClass;
 import net.joshuahughes.fccamateurradio.examination.Utility;
-import net.joshuahughes.fccamateurradio.examination.Utility.Class;
 import net.joshuahughes.fccamateurradio.examination.pool.DocxPool;
 import net.joshuahughes.fccamateurradio.examination.pool.function.Contains;
 import net.joshuahughes.fccamateurradio.examination.pool.function.FCC;
@@ -30,8 +30,8 @@ public class StartFrame extends JFrame
 	LinkedHashMap<JRadioButton,Utility.Ordering> orderMap = new LinkedHashMap<>();
 	ButtonGroup orderGrp = new ButtonGroup();
 
-	JComboBox<Utility.Class> classBox = new JComboBox<>(Utility.Class.values());
-	LinkedHashMap<Utility.Class, DocxPool> examMap = new LinkedHashMap<>();
+	JComboBox<LicenseClass> classBox = new JComboBox<>(LicenseClass.values());
+	LinkedHashMap<LicenseClass, DocxPool> examMap = new LinkedHashMap<>();
 	JComboBox<String> subelementBox = new JComboBox<String>();
 	JComboBox<String> groupBox = new JComboBox<String>();
 	JButton fccBtn = new JButton("FCC");
@@ -47,7 +47,7 @@ public class StartFrame extends JFrame
 		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
 		Stream.of(file.listFiles()).forEach(f->
 		{
-			Utility.Class cls = Stream.of(Utility.Class.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
+			LicenseClass cls = Stream.of(LicenseClass.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
 			DocxPool pool = new DocxPool(f);
 			examMap.put(cls, pool);
 		});
@@ -59,7 +59,7 @@ public class StartFrame extends JFrame
 			getPool().stream().map(q->q.getGroup()).distinct().forEach(s->groupBox.addItem(s));
 			pack();
 		});
-		classBox.setSelectedItem(Utility.Class.general);
+		classBox.setSelectedItem(LicenseClass.general);
 		Container p = getContentPane();
 		GridBagConstraints gbc = new GridBagConstraints();
 		
@@ -110,7 +110,7 @@ public class StartFrame extends JFrame
 		});
 		fccBtn.addActionListener(l->
 		{
-			dialog.set(new FCC((Class) this.classBox.getSelectedItem()).apply(getPool()));
+			dialog.set(new FCC((LicenseClass) this.classBox.getSelectedItem()).apply(getPool()));
 		});
 		containsFld.addActionListener(l->
 		{
@@ -121,7 +121,7 @@ public class StartFrame extends JFrame
 	
 	public DocxPool getPool()
 	{
-		return examMap.get((Utility.Class) classBox.getSelectedItem());
+		return examMap.get((LicenseClass) classBox.getSelectedItem());
 		
 	}
 	public static void main(String[] args)
