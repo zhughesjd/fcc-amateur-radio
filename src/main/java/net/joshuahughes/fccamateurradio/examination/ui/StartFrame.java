@@ -21,7 +21,11 @@ import net.joshuahughes.fccamateurradio.examination.Utility;
 import net.joshuahughes.fccamateurradio.examination.pool.DocxPool;
 import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 import net.joshuahughes.fccamateurradio.examination.pool.function.Contains;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Creator;
 import net.joshuahughes.fccamateurradio.examination.pool.function.FCC;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Random;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Reverse;
+import net.joshuahughes.fccamateurradio.examination.pool.function.Stationary;
 
 public class StartFrame extends JFrame
 {
@@ -33,6 +37,8 @@ public class StartFrame extends JFrame
 	LinkedHashMap<LicenseClass, DocxPool> examMap = new LinkedHashMap<>();
 	JButton fccBtn = new JButton("FCC");
 	JTextField containsFld = new JTextField(15);
+	Creator[] creators = new Creator[] {new Random(),new Reverse(),new Stationary()};
+	JComboBox<Creator> creatorBox =new JComboBox<>(creators);
 	ExamDialog dialog;
 
 	public StartFrame(ExamDialog dlg) 
@@ -63,10 +69,11 @@ public class StartFrame extends JFrame
 		
 		gbc.gridx=0;
 		gbc.gridy++;
-		gbc.gridwidth=2;
-		p.add(sePnl,gbc);
+		p.add(new JLabel("arrangement: "),gbc);
 
-		gbc.gridwidth=1;
+		gbc.gridx++;
+		p.add(creatorBox,gbc);
+
 		gbc.gridx=0;
 		gbc.gridy++;
 		p.add(new JLabel("fcc: "),gbc);
@@ -80,19 +87,25 @@ public class StartFrame extends JFrame
 
 		gbc.gridx++;
 		p.add(containsFld,gbc);
+
+		gbc.gridx=0;
+		gbc.gridy++;
+		gbc.gridwidth=2;
+		p.add(sePnl,gbc);
+
 		
 		sePnl.addPropertyChangeListener(SubelementGroupPanel.class.getCanonicalName(), l->
 		{
-			dialog.set((Pool)l.getNewValue());
+			dialog.set(((Creator)creatorBox.getSelectedItem()).apply((Pool)l.getNewValue()));
 		});
 		
 		fccBtn.addActionListener(l->
 		{
-			dialog.set(new FCC((LicenseClass) classBox.getSelectedItem()).apply(getPool()));
+			dialog.set(((Creator)creatorBox.getSelectedItem()).apply(new FCC((LicenseClass) classBox.getSelectedItem()).apply(getPool())));
 		});
 		containsFld.addActionListener(l->
 		{
-			dialog.set(new Contains(containsFld.getText()).apply(getPool()));
+			dialog.set(((Creator)creatorBox.getSelectedItem()).apply(new Contains(containsFld.getText()).apply(getPool())));
 		});
 		pack();
 	}

@@ -47,7 +47,7 @@ public class Utility
 		ps.close();
 		return new String(baos.toByteArray());
 	}
-	private static String answerStringLength(List<Question> list)
+	public static String answerStringLength(List<Question> list)
 	{
 		TreeMap<Integer, Integer> placeMap = new TreeMap<>();
 		IntStream.range(0, 4).forEach(i->placeMap.put(i,0));

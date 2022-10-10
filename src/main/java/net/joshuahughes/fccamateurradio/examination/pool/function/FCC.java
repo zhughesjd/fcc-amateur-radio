@@ -26,5 +26,4 @@ public class FCC implements Creator
 		exam.addAll(fccQuestions);
 		return exam;
 	}
-
 }
