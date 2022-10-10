@@ -5,7 +5,6 @@ import java.util.stream.IntStream;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -28,7 +27,11 @@ public class SubelementGroupPanel extends JPanel
 		add(new JScrollPane(sLst,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),BorderLayout.CENTER);
 		add(new JScrollPane(gLst, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),BorderLayout.EAST);
 		
-		sLst.addListSelectionListener(l->updateGroupList());
+		sLst.addListSelectionListener(l->
+		{
+			if(l.getValueIsAdjusting()) return;
+			updateGroupList();
+		});
 		gLst.addListSelectionListener( e ->	firePropertyChange(SubelementGroupPanel.class.getName(), null, getExam()));
 	}
 	private Exam getExam()
@@ -55,7 +58,7 @@ public class SubelementGroupPanel extends JPanel
 			String subelement = sMdl.get(ndx);
 			licenseClass.getPool().stream().filter(q->q.getSubelement().equals(subelement)).map(q->q.getGroup()).distinct().forEach(s->gMdl.addElement(s));
 		});
-//		gLst.setSelectionInterval(0, gLst.getModel().getSize());
+		gLst.setSelectionInterval(0, gLst.getModel().getSize()-1);
 	}
 	public void setLicenseClass(LicenseClass cls)
 	{
@@ -63,16 +66,5 @@ public class SubelementGroupPanel extends JPanel
 		sMdl.clear();
 		gMdl.clear();
 		cls.getPool().stream().map(q->q.getSubelement()).distinct().forEach(s->sMdl.addElement(s));
-	}
-	public static void main(String[] args)
-	{
-		SubelementGroupPanel panel = new SubelementGroupPanel();
-		panel.addPropertyChangeListener(SubelementGroupPanel.class.getCanonicalName(),l->
-		{
-			Exam exam = (Exam) l.getNewValue();
-			System.out.println(exam.size());
-		});
-		panel.setLicenseClass(LicenseClass.general);
-		JOptionPane.showConfirmDialog(null,panel);
 	}
 }

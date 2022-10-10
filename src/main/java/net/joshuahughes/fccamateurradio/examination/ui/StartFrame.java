@@ -88,7 +88,7 @@ public class StartFrame extends JFrame
 		
 		fccBtn.addActionListener(l->
 		{
-			dialog.set(new FCC((LicenseClass) this.classBox.getSelectedItem()).apply(getPool()));
+			dialog.set(new FCC((LicenseClass) classBox.getSelectedItem()).apply(getPool()));
 		});
 		containsFld.addActionListener(l->
 		{
