@@ -87,7 +87,7 @@ public class DocxPool extends PoolImpl
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.err.println("invalid file.  pool empty.");
 		}
 	}
 	public List<BufferedImage> getImages()

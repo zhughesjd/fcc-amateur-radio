@@ -3,9 +3,7 @@ package net.joshuahughes.fccamateurradio.examination.ui;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.stream.Stream;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -34,7 +32,6 @@ public class StartFrame extends JFrame
 	ButtonGroup orderGrp = new ButtonGroup();
 	SubelementGroupPanel sePnl = new SubelementGroupPanel();
 	JComboBox<LicenseClass> classBox = new JComboBox<>(LicenseClass.values());
-	LinkedHashMap<LicenseClass, DocxPool> examMap = new LinkedHashMap<>();
 	JButton fccBtn = new JButton("FCC");
 	JTextField containsFld = new JTextField(15);
 	Creator[] creators = new Creator[] {new Random(),new Reverse(),new Stationary()};
@@ -45,13 +42,6 @@ public class StartFrame extends JFrame
 	{
 		dialog = dlg;
 		setContentPane(new JPanel(new GridBagLayout()));
-		File file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
-		Stream.of(file.listFiles()).forEach(f->
-		{
-			LicenseClass cls = Stream.of(LicenseClass.values()).filter(c->f.getName().toLowerCase().contains(c.name())).findAny().get();
-			DocxPool pool = new DocxPool(f);
-			examMap.put(cls, pool);
-		});
 		classBox.addActionListener(l->
 		{
 			sePnl.setLicenseClass((LicenseClass) classBox.getSelectedItem());
@@ -112,8 +102,7 @@ public class StartFrame extends JFrame
 	
 	public DocxPool getPool()
 	{
-		return examMap.get((LicenseClass) classBox.getSelectedItem());
-		
+		return ((LicenseClass)classBox.getSelectedItem()).getPool();
 	}
 	public static void main(String[] args)
 	{
