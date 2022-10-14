@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.stream.Stream;
 
 import net.joshuahughes.fccamateurradio.examination.pool.DocxPool;
-import net.joshuahughes.fccamateurradio.examination.ui.ExamDialog;
+import net.joshuahughes.fccamateurradio.examination.ui.ExamFrame;
 
 public class LicenseClass
 {
@@ -18,7 +18,7 @@ public class LicenseClass
 	{
 		questionCount = Stream.of(classes).mapToInt(c->c.getQuestionCount()).sum();
 		passingCount = Stream.of(classes).mapToInt(c->c.getPassingCount()).sum();
-		file = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
+		file = new File(ExamFrame.class.getClassLoader().getResource("docx/").getFile());
 		name = nm;
 		pool = new DocxPool(getFile());
 		pool.clear();
@@ -36,7 +36,7 @@ public class LicenseClass
 		questionCount = qstnCnt;
 		passingCount = pssCnt;
 		name = nm;
-		File dir = new File(ExamDialog.class.getClassLoader().getResource("docx/").getFile());
+		File dir = new File(ExamFrame.class.getClassLoader().getResource("docx/").getFile());
 		file = Stream.of(dir.listFiles()).filter(f->f.getName().toLowerCase().contains(name())).findAny().get();
 		pool = new DocxPool(file);
 	}

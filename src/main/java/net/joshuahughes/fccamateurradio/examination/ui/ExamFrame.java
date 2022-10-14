@@ -1,9 +1,7 @@
 package net.joshuahughes.fccamateurradio.examination.ui;
 
-import static com.metsci.glimpse.docking.DockingFrameCloseOperation.DISPOSE_ALL_FRAMES;
 import static com.metsci.glimpse.docking.DockingUtils.setArrangementAndSaveOnDispose;
 import static com.metsci.glimpse.docking.DockingWindowTitlers.createDefaultWindowTitler;
-import static java.awt.Dialog.ModalityType.MODELESS;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -20,36 +18,40 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.metsci.glimpse.docking.DockingFrameCloseOperation;
 import com.metsci.glimpse.docking.View;
 import com.metsci.glimpse.docking.examples.ModalDialogDockingExample;
-import com.metsci.glimpse.docking.group.dialog.DockingGroupDialog;
+import com.metsci.glimpse.docking.group.frame.DockingGroupMultiframe;
 
 import net.joshuahughes.fccamateurradio.examination.Question;
 import net.joshuahughes.fccamateurradio.examination.pool.Pool;
 import net.joshuahughes.fccamateurradio.examination.ui.question.ChoicePanel;
 import net.joshuahughes.fccamateurradio.examination.ui.question.DisplayPanel;
 
-public class ExamDialog extends DockingGroupDialog 
+public class ExamFrame extends DockingGroupMultiframe 
 {
 	LinkedHashSet<JDialog> dlgSet = new LinkedHashSet<>();
 	DisplayPanel previousPnl = new DisplayPanel();
 	ChoicePanel  currentPnl = new ChoicePanel();
 	JTextArea textArea = new JTextArea();
 	ArrayList<Question> pending = new ArrayList<>();
+	ControlView controlView = new ControlView(this);
+
 	Boolean appendWrong = null;
 	Pool exam;
-	public ExamDialog()
+	public ExamFrame()
 	{
-		super(null, MODELESS, DISPOSE_ALL_FRAMES );
+		super(DockingFrameCloseOperation.EXIT_JVM);
         addListener( createDefaultWindowTitler( "Docking Example" ) );
-        setArrangementAndSaveOnDispose( this, ExamDialog.class.getName(), ModalDialogDockingExample.class.getResource( "docking/simple-arrangement-default.xml" ) );
+        setArrangementAndSaveOnDispose( this, ExamFrame.class.getName(), ModalDialogDockingExample.class.getResource( "docking/simple-arrangement-default.xml" ) );
 		addViews
 		(
 			new View[] 
 			{
 				new View(0+"", currentPnl, "current"),
 				new View(1+"", previousPnl, "previous"),
-				new View(2+"", new JScrollPane(textArea), "result")
+				new View(2+"", new JScrollPane(textArea), "result"),
+				controlView
 			}
 		);
 		currentPnl.addPropertyChangeListener(ChoicePanel.class.getCanonicalName(),l->
@@ -108,5 +110,10 @@ public class ExamDialog extends DockingGroupDialog
 	{
 		super.setVisible(visible);
 		currentPnl.requestFocus();
+	}
+	public static void main(String[] args)
+	{
+		ExamFrame dialog = new ExamFrame();
+		dialog.setVisible(true);
 	}
 }
